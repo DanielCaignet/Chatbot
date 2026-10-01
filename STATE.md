@@ -13,7 +13,7 @@ actualizado: 2026-10-01
 ## Donde estamos
 F0 cerrada: Spec Kit + vault + grafo montados. Entrevista hecha; constitución v1.0.0 ratificada
 ([[ADR-000-constitucion]]). Decisiones base en [[ADR-001]]…[[ADR-008]].
-Plan maestro aprobado: `C:\Users\danie\.claude\plans\quiero-hacer-este-proyecto-wild-sparrow.md`.
+Plan maestro aprobado: `docs/PLAN-MAESTRO.md`. Traspaso a Richard: `docs/COMO-CONTINUAR.md`.
 
 ## Spec activo
 ninguno. Siguiente: SPEC-001, spike de viabilidad en la VM (F1 del plan).

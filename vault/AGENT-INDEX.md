@@ -16,6 +16,10 @@ actualizado: 2026-10-01
 - [[02 - Indice de Decisiones]] — por que las cosas son como son
 - [[03 - Indice de Fuentes]] — documentos externos ya destilados
 
+## Fuera del vault
+- `docs/PLAN-MAESTRO.md`: plan aprobado (arquitectura y fases F0–F8)
+- `docs/COMO-CONTINUAR.md`: traspaso a otro PC (herramientas e instalación)
+
 ## Como consultar antes de responder
 ```bash
 graphify query "<pregunta>"        # subgrafo acotado
