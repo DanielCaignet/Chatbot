@@ -1,0 +1,8 @@
+# full-autodev: indice derivado, se reconstruye con `graphify update .`
+graphify-out/
+# historial de compuertas: util local, ruidoso en diffs
+.gates/history.jsonl
+# anti-slop: registro local del scanner (solo con --record)
+.anti-slop/
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json

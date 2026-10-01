@@ -1,0 +1,95 @@
+# Compuertas deterministas — chatbot-richard
+# Corre con: python "$env:USERPROFILE\.claude\skills\full-autodev\references\gates.py"
+#
+# severity = "block" -> exit 1, bloquea el commit
+# severity = "warn"  -> se reporta, no bloquea
+
+[project]
+name = "chatbot-richard"
+
+[conventions]
+specs_glob    = "specs/**/*.md"
+skip_prefixes = ["_"]
+req_pattern   = 'RQ-[A-Z0-9]+-\d{3}'
+state_line    = '\*\*Estado:\*\*\s*([^·|\n]+)'
+closed_states = ["cerrada", "cerrado", "vigente", "aprobada", "aprobado"]
+ears_verb     = 'EL SISTEMA DEBER[ÁA]'
+probe_pattern = 'V-\d{2}'
+
+# Dueño unico del nivel de madurez: columnas Nivel/Limite del MOC de specs (G-N1)
+maturity_file     = "vault/MOCs/00 - Indice de Specs.md"
+
+# Rellenar cuando el proyecto los tenga; vacio = compuerta desactivada
+references_file   = ""
+decisions_file    = ""
+
+state_file         = "STATE.md"
+sprawl_patterns    = ["*handoff*.md", "*estado*.md", "*context*.md", "*traspaso*.md"]
+# prefijos que SLOP-SCAN no juzga: artefactos de terceros (p. ej. lo que mando el cliente)
+slop_exclude       = []
+sprawl_exempt_dirs = [".git", "graphify-out", ".gates", "vault/Decisiones"]
+
+[gates."G-REF"]
+enabled = true
+severity = "block"
+
+[gates."G-EARS"]
+enabled = true
+severity = "block"
+
+[gates."G-VERIF"]
+enabled = true
+severity = "block"
+
+[gates."TRAZA"]
+enabled = true
+severity = "warn"
+
+[gates."G-N1"]
+enabled = true
+severity = "block"
+
+[gates."REF-DANGLING"]
+enabled = false
+severity = "warn"
+
+[gates."DE-DANGLING"]
+enabled = false
+severity = "warn"
+
+[gates."STATE-SPRAWL"]
+enabled = true
+severity = "warn"
+
+[gates."GRAPH-MISSING"]
+enabled = true
+severity = "warn"
+
+[gates."DERIVED-COMMITTED"]
+enabled = true
+severity = "warn"
+
+# Scanner determinista del plugin anti-slop sobre los archivos cambiados.
+# Nace en "warn": se promueve a "block" cuando .gates/history.jsonl muestre que no da
+# falsos positivos en este proyecto (Fase 6). Sin plugin o sin node, avisa y no bloquea.
+[gates."SLOP-SCAN"]
+enabled = true
+severity = "warn"
+
+# Todo [[enlace]] del vault y de specs/ resuelve a una nota (nombre = ID exacto).
+# Un enlace roto es una arista que el grafo no tiene.
+[gates."WIKI-DANGLING"]
+enabled = true
+severity = "warn"
+
+# Documento de mas de doc_max_lines (200): mirar si tiene partes que se leen en momentos
+# distintos. Por defecto mira vault/ y CLAUDE.md; para sumar docs operativos, en [conventions]:
+#   doc_size_globs = ["vault/**/*.md", "CLAUDE.md", "docs/DESPLIEGUE.md"]
+[gates."DOC-SIZE"]
+enabled = true
+severity = "warn"
+
+# Nota de vault/ o docs/ que ninguna otra enlaza ni nombra: el agente no llega a ella.
+[gates."DOC-ORPHAN"]
+enabled = true
+severity = "warn"
