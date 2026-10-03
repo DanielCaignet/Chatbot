@@ -47,8 +47,8 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
 - [ ] T006 V0: escribir `spike/vm/forma.sh` que registre arquitectura, núcleos, memoria, disco, sistema operativo y versiones de Docker y Python; ejecutarlo en la VM y pegar la salida en `resultados.md` §1; contrastar con 2 OCPU / 12 GB [EXT:Oracle Always Free] (FR-001, FR-004)
 - [x] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
-- [ ] T008 Escribir `spike/bench/runner.py` que ejecute el banco contra un endpoint compatible con OpenAI y guarde por consulta: tiempo total, tiempo del modelo, `prompt_tokens`, `completion_tokens` y si hubo 429 del proveedor o del arnés, en `spike/bench/salida/*.json` (R4, R5; depende de T007)
-- [ ] T009 [P] Escribir `spike/measure/memoria.sh` que capture memoria (RSS) y CPU por contenedor en reposo, bajo carga y en ráfaga, y guarde un CSV en `spike/measure/salida/`
+- [x] T008 Escribir `spike/bench/runner.py` que ejecute el banco contra un endpoint compatible con OpenAI y guarde por consulta: tiempo total, tiempo del modelo, `prompt_tokens`, `completion_tokens` y si hubo 429 del proveedor o del arnés, en `spike/bench/salida/*.json` (R4, R5; depende de T007)
+- [x] T009 [P] Escribir `spike/measure/memoria.sh` que capture memoria (RSS) y CPU por contenedor en reposo, bajo carga y en ráfaga, y guarde un CSV en `spike/measure/salida/`
 
 **Checkpoint**: VM caracterizada, banco y medidores listos. Las historias pueden empezar.
 
@@ -68,7 +68,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T013 [US1] Escribir y correr `spike/hermes/prueba_sesiones.sh`: tres conversaciones con `X-Hermes-Session-Id` distintos; un dato inventado en la A no debe aparecer en la B (FR-011)
 - [ ] T014 [US1] Contención de red en `spike/hermes/red/`: red interna más proxy con lista blanca (proveedor de modelos y MCP); comprobar **desde dentro del contenedor** que otro destino falla y que no hay montajes del host (R10; FR-012)
 - [ ] T015 [US1] Escribir y correr `spike/hermes/prueba_429.py`: 12 solicitudes simultáneas contra el límite de 10; confirmar 429 en las excedentes y recuperación completa con reintento y espera creciente, sin pérdida ni duplicado; anotar si el límite aplica a `/v1/chat/completions` o solo a `/v1/runs` (R6; FR-013)
-- [ ] T016 [US1] Escribir `spike/baseline/bucle.py`: bucle de referencia mínimo con el mismo proveedor, modelo, herramientas MCP y banco (R3; FR-014)
+- [x] T016 [US1] Escribir `spike/baseline/bucle.py`: bucle de referencia mínimo con el mismo proveedor, modelo, herramientas MCP y banco (R3; FR-014)
 - [ ] T017 [US1] Correr el banco (≥20 consultas) en Hermes y en el bucle con `runner.py`; calcular tokens por llamada y su razón, y p50/p95 de latencia separando modelo de arnés; pasa si razón ≤ 2× y p95 < 15 s (R3–R5; FR-014, FR-015; depende de T008, T010, T016)
 - [ ] T018 [US1] Medir la memoria del arnés en reposo y bajo carga con `spike/measure/memoria.sh` (FR-016)
 - [ ] T019 [US1] Dar el veredicto del arnés en `resultados.md` (filas V3 y §5): `go`, o `no-go` con bucle propio si la razón > 2× o no se pueden apagar las herramientas (FR-025)
@@ -105,8 +105,8 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Crear `spike/toolbox/esquema.sql` y `spike/toolbox/esquema.json`: tablas `producto(id, sku, nombre, categoria, precio, activo)` e `inventario(producto_id, cantidad)` con datos inventados, rol `lector` (solo SELECT) y rol `escritor` (solo para comprobar que el lector no puede escribir)
-- [ ] T028 [P] [US3] Escribir `spike/toolbox/generar_tools.py` que genere `tools.yaml` desde `esquema.json` con herramientas `kind: postgres-sql` (`catalogo_buscar`, `item_obtener`, `disponibilidad`), `statement` fijo con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases] (R7; FR-017; depende de T027)
+- [x] T027 [US3] Crear `spike/toolbox/esquema.sql` y `spike/toolbox/esquema.json`: tablas `producto(id, sku, nombre, categoria, precio, activo)` e `inventario(producto_id, cantidad)` con datos inventados, rol `lector` (solo SELECT) y rol `escritor` (solo para comprobar que el lector no puede escribir)
+- [x] T028 [P] [US3] Escribir `spike/toolbox/generar_tools.py` que genere `tools.yaml` desde `esquema.json` con herramientas `kind: tool` con `type: postgres-sql` (`catalogo_buscar`, `item_obtener`, `disponibilidad`), `statement` fijo con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases] (R7; FR-017; depende de T027)
 - [ ] T029 [US3] Crear `spike/toolbox/compose.yml` con Toolbox y Postgres con versiones fijadas, usando el rol `lector` en el `source`; nunca `--prebuilt=postgres` (FR-004, FR-019)
 - [ ] T030 [US3] Escribir y correr `spike/toolbox/ataques.sh`: comillas, `; DROP`, `UNION SELECT` y parámetros de tipo equivocado; ninguno debe alterar la consulta ni devolver datos fuera de lo declarado (R7; FR-018)
 - [ ] T031 [US3] Comprobar en `spike/toolbox/tools.yaml` y `spike/toolbox/compose.yml` que no existe ninguna vía de SQL libre y que un `INSERT` con el rol `lector` falla; anotar el resultado en `resultados.md` (FR-019)
