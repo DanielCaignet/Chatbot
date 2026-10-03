@@ -9,6 +9,8 @@
 #   docker compose --env-file ../.env config --quiet
 # Para la contención de red (T014) ver red/compose.red.yml; ejecutar siempre desde spike/hermes/.
 
+name: spike-hermes   # proyecto propio del spike; no mezclar con otros proyectos de la VM ([[ADR-009]])
+
 services:
   hermes:
     # Versión fija (FR-004). Soporta arm64, que es la arquitectura de la VM. Registrar el digest en resultados.md.
@@ -25,6 +27,7 @@ services:
       API_SERVER_KEY: ${API_SERVER_KEY:?falta API_SERVER_KEY en spike/.env}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?falta OPENROUTER_API_KEY en spike/.env}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:?falta OPENROUTER_MODEL en spike/.env}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}   # proveedor principal (ADR-011); vacía si aún no hay llave
     volumes:
       - hermes-data:/opt/data
     networks:
@@ -38,5 +41,7 @@ volumes:
   hermes-data:
 
 networks:
-  # Red propia; la Toolbox (T029) se une a ella con el nombre `toolbox`. T014 la vuelve interna.
+  # Red compartida con la Toolbox (spike/toolbox/compose.yml la declara como externa): en ella Hermes ve
+  # al servicio `toolbox` y a nadie más. Levantar este compose primero. T014 la vuelve interna.
   hermes-net:
+    name: spike-hermes

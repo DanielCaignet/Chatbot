@@ -4,20 +4,30 @@
 # No lleva ningún secreto: la llave del modelo y la del api_server llegan por variable de entorno.
 # Se copia dentro del contenedor con `docker cp` (ver compose.yml); no hay montajes del host.
 
+# Principal: Google AI Studio (cuota propia, ADR-011). Gemini 3.5 Flash-Lite respondió en 1,2 s con herramienta el
+# 2026-10-03; Gemini 2.5 Flash-Lite ya no está disponible para cuentas nuevas. La llave es GOOGLE_API_KEY.
 model:
-  provider: openrouter
-  default: ${OPENROUTER_MODEL}
+  provider: gemini
+  default: gemini-3.5-flash-lite
+
+# Respaldo: si Google falla o limita, Hermes pasa a OpenRouter (su cuota diaria es otra). Más eslabones se añaden
+# aquí cuando T049 verifique cada proveedor. Un salto cambia el modelo: ninguna medición vale si hubo salto.
+fallback_providers:
+  - provider: openrouter
+    model: nvidia/nemotron-3-super-120b-a12b:free
 
 agent:
   # Todas las toolsets núcleo de la referencia, para que el agente solo pueda usar la MCP de la tienda.
   # `agent.disabled_toolsets` se aplica después de la config por plataforma, así que gana siempre.
   # Las compuestas (coding, debugging, safe) y las `hermes-*` no se listan: se arman con estas.
   disabled_toolsets:
+    - a2a            # no figura en la referencia de toolsets pero /v1/toolsets la lista (5 herramientas)
     - browser
     - clarify
     - code_execution
     - computer_use
     - connections
+    - context_engine
     - cronjob
     - delegation
     - desktop_ui
@@ -36,6 +46,7 @@ agent:
     - setup
     - skills
     - spotify
+    - stt
     - terminal
     - todo
     - tts
@@ -46,6 +57,11 @@ agent:
     - x_search
     - yuanbao
 
+# Cada sesión nueva gastaba una solicitud extra del modelo solo para ponerle título; con 50 por día no sobra.
+auxiliary:
+  title_generation:
+    enabled: false
+
 gateway:
   # Sin `multiplex_profiles`: con él el api_server reactiva las toolsets apagadas
   # (https://github.com/NousResearch/hermes-agent/issues/91415). Un contenedor por cliente.
@@ -53,7 +69,7 @@ gateway:
     enabled: true
     max_concurrent_runs: 10   # tope por defecto; T015 lo prueba con 12 solicitudes
 
-# La única fuente de herramientas: la MCP de lectura (Toolbox, T029). Dirección por confirmar en T029.
+# La única fuente de herramientas: la MCP de lectura (Toolbox, T029). Dirección confirmada en T029 (initialize, tools/list y una llamada, desde la red de Hermes).
 mcp_servers:
   tienda:
     url: "http://toolbox:5000/mcp"

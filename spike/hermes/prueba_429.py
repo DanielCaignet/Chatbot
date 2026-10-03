@@ -18,6 +18,7 @@ Salida: salida/429-<endpoint>-<fecha>.json. Código de salida: 0 pasa, 1 falla, 
 """
 import argparse
 import json
+import re
 import sys
 import threading
 import time
@@ -112,7 +113,13 @@ def main():
     max_espera = max((e["espera_s"] for r in resultados.values() for e in r["eventos_429"]), default=0)
     recuperadas = [n for n in con_429 if n not in perdidas]
 
-    if perdidas or cruzadas or ajenas or len(resultados) != args.solicitudes:
+    # Medido el 2026-10-03: cuando el proveedor limita, Hermes responde HTTP 200 con un texto de disculpa que
+    # nombra "rate-limited"; no es un 429 visible. Si eso ocurre, la prueba del tope de Hermes no concluye.
+    cuota_proveedor = [n for n, r in resultados.items()
+                       if r["texto"] and re.search(r"rate[- ]?limit", r["texto"], re.I)]
+    if cuota_proveedor:
+        veredicto = "no concluyente"
+    elif perdidas or cruzadas or ajenas or len(resultados) != args.solicitudes:
         veredicto = "falla"
     elif not con_429:
         veredicto = "no concluyente"
@@ -121,7 +128,7 @@ def main():
     archivo.write_text(json.dumps({
         "endpoint": "chat", "veredicto": veredicto, "solicitudes": args.solicitudes,
         "con_429_del_arnes": len(con_429), "con_429_del_proveedor": len(del_proveedor), "recuperadas_tras_429": len(recuperadas), "perdidas": perdidas,
-        "respuestas_cruzadas": cruzadas, "sin_su_ficha": ajenas, "espera_maxima_s": max_espera, "duracion_s": duracion,
+        "respuestas_cruzadas": cruzadas, "sin_su_ficha": ajenas, "respuestas_por_cuota_del_proveedor": len(cuota_proveedor), "espera_maxima_s": max_espera, "duracion_s": duracion,
         "detalle": resultados}, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"/v1/chat/completions: {args.solicitudes} solicitudes en {duracion}s")
@@ -129,7 +136,9 @@ def main():
     print(f"  respuestas propias: {len(propias)}/{args.solicitudes} | cruzadas: {len(cruzadas)} | sin su ficha: {len(ajenas)}")
     print(f"  espera máxima entre reintentos: {max_espera}s")
     print("veredicto:", veredicto)
-    if veredicto == "no concluyente":
+    if cuota_proveedor:
+        print(f"  {len(cuota_proveedor)} respuestas son el aviso de límite del proveedor (cuota diaria agotada): repetir cuando se reinicie.")
+    elif veredicto == "no concluyente":
         print("  no hubo 429 del arnés: las ejecuciones no llegaron a solaparse 10 a la vez. Repetir con más solicitudes (--solicitudes 20).")
     return {"pasa": 0, "falla": 1}.get(veredicto, 3)
 

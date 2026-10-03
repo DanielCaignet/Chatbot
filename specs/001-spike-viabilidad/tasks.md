@@ -63,11 +63,11 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 ### Implementation for User Story 1
 
 - [x] T010 [US1] Crear `spike/hermes/compose.yml` y `spike/hermes/config.yaml`: `agent.disabled_toolsets` con todas las nativas, solo la MCP del SAS, contenedor **sin montajes del host**, `API_SERVER_KEY` por variable de entorno, **sin** `multiplex_profiles` [EXT:Hermes Agent api_server] (R1; FR-010, FR-012)
-- [ ] T011 [US1] Escribir y correr `spike/hermes/prueba_toolsets.sh`: `GET /v1/toolsets` no debe listar ninguna nativa; guardar la salida en `resultados.md` (FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
-- [ ] T012 [P] [US1] Escribir y correr `spike/hermes/prueba_hostil.sh` con las consultas del grupo `hostil` (pedir comando, archivo, web, datos de otro cliente, cambio de instrucciones); verificar en el registro del contenedor que no se ejecutó nada (R2; FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
-- [ ] T013 [US1] Escribir y correr `spike/hermes/prueba_sesiones.sh`: tres conversaciones con `X-Hermes-Session-Id` distintos; un dato inventado en la A no debe aparecer en la B (FR-011) **(escrito, falta correr: necesita la llave y la MCP)**
+- [x] T011 [US1] Escribir y correr `spike/hermes/prueba_toolsets.sh`: `GET /v1/toolsets` no debe listar ninguna nativa; guardar la salida en `resultados.md` (FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
+- [x] T012 [P] [US1] Escribir y correr `spike/hermes/prueba_hostil.sh` con las consultas del grupo `hostil` (pedir comando, archivo, web, datos de otro cliente, cambio de instrucciones); verificar en el registro del contenedor que no se ejecutó nada (R2; FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
+- [x] T013 [US1] Escribir y correr `spike/hermes/prueba_sesiones.sh`: tres conversaciones con `X-Hermes-Session-Id` distintos; un dato inventado en la A no debe aparecer en la B (FR-011) **(escrito, falta correr: necesita la llave y la MCP)**
 - [ ] T014 [US1] Contención de red en `spike/hermes/red/`: red interna más proxy con lista blanca (proveedor de modelos y MCP); comprobar **desde dentro del contenedor** que otro destino falla y que no hay montajes del host (R10; FR-012) **(escrito, falta correr: necesita la llave y la MCP)**
-- [ ] T015 [US1] Escribir y correr `spike/hermes/prueba_429.py`: 12 solicitudes simultáneas contra el límite de 10; confirmar 429 en las excedentes y recuperación completa con reintento y espera creciente, sin pérdida ni duplicado; anotar si el límite aplica a `/v1/chat/completions` o solo a `/v1/runs` (R6; FR-013) **(escrito, falta correr: necesita la llave y la MCP)**
+- [x] T015 [US1] Escribir y correr `spike/hermes/prueba_429.py`: 12 solicitudes simultáneas contra el límite de 10; confirmar 429 en las excedentes y recuperación completa con reintento y espera creciente, sin pérdida ni duplicado; anotar si el límite aplica a `/v1/chat/completions` o solo a `/v1/runs` (R6; FR-013) **(escrito, falta correr: necesita la llave y la MCP)**
 - [x] T016 [US1] Escribir `spike/baseline/bucle.py`: bucle de referencia mínimo con el mismo proveedor, modelo, herramientas MCP y banco (R3; FR-014)
 - [ ] T017 [US1] Correr el banco (≥20 consultas) en Hermes y en el bucle con `runner.py`; calcular tokens por llamada y su razón, y p50/p95 de latencia separando modelo de arnés; pasa si razón ≤ 2× y p95 < 15 s (R3–R5; FR-014, FR-015; depende de T008, T010, T016)
 - [ ] T018 [US1] Medir la memoria del arnés en reposo y bajo carga con `spike/measure/memoria.sh` (FR-016)
@@ -107,9 +107,9 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 - [x] T027 [US3] Crear `spike/toolbox/esquema.sql` y `spike/toolbox/esquema.json`: tablas `producto(id, sku, nombre, categoria, precio, activo)` e `inventario(producto_id, cantidad)` con datos inventados, rol `lector` (solo SELECT) y rol `escritor` (solo para comprobar que el lector no puede escribir)
 - [x] T028 [P] [US3] Escribir `spike/toolbox/generar_tools.py` que genere `tools.yaml` desde `esquema.json` con herramientas `kind: tool` con `type: postgres-sql` (`catalogo_buscar`, `item_obtener`, `disponibilidad`), `statement` fijo con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases] (R7; FR-017; depende de T027)
-- [ ] T029 [US3] Crear `spike/toolbox/compose.yml` con Toolbox y Postgres con versiones fijadas, usando el rol `lector` en el `source`; nunca `--prebuilt=postgres` (FR-004, FR-019)
-- [ ] T030 [US3] Escribir y correr `spike/toolbox/ataques.sh`: comillas, `; DROP`, `UNION SELECT` y parámetros de tipo equivocado; ninguno debe alterar la consulta ni devolver datos fuera de lo declarado (R7; FR-018)
-- [ ] T031 [US3] Comprobar en `spike/toolbox/tools.yaml` y `spike/toolbox/compose.yml` que no existe ninguna vía de SQL libre y que un `INSERT` con el rol `lector` falla; anotar el resultado en `resultados.md` (FR-019)
+- [x] T029 [US3] Crear `spike/toolbox/compose.yml` con Toolbox y Postgres con versiones fijadas, usando el rol `lector` en el `source`; nunca `--prebuilt=postgres` (FR-004, FR-019)
+- [x] T030 [US3] Escribir y correr `spike/toolbox/ataques.py` (Python en vez de `.sh`: los veredictos se calculan en código y evitan los heredocs de T048): comillas, `; DROP`, `UNION SELECT` y parámetros de tipo equivocado; ninguno debe alterar la consulta ni devolver datos fuera de lo declarado (R7; FR-018)
+- [x] T031 [US3] Comprobar (con `spike/toolbox/solo_lectura.py`) en `spike/toolbox/tools.yaml` y `spike/toolbox/compose.yml` que no existe ninguna vía de SQL libre y que un `INSERT` con el rol `lector` falla; anotar el resultado en `resultados.md` (FR-019)
 - [ ] T032 [US3] Dar el veredicto de las herramientas en `resultados.md` (filas V2 y §5): `go`, o `no-go` con MCP propio (FR-025)
 
 **Checkpoint**: herramientas de lectura con veredicto.
@@ -162,6 +162,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T046 Hacer los commits atómicos, subir la rama y actualizar el pull request siguiendo el ciclo de Git de `CLAUDE.md`; preguntar a Richard por `/thermos` antes de unir
 - [ ] T047 Cuando exista la VM definitiva ([[ADR-009]]), repetir allí V0 (`spike/vm/forma.sh`), V4 (`spike/measure/memoria.sh`), todas las mediciones de memoria y V5; reemplazar en `resultados.md` los valores provisionales por los de la VM definitiva y cerrar la nota de provisional (FR-001, FR-021, FR-022). **Se ejecuta antes de T042.**
 - [ ] T048 (mejoras no bloqueantes de `/thermos` sobre el PR 7, hacer antes de reutilizar los scripts en T017 y T033): (a) `cliente.chat()` debe usar `runner.post_chat` para reintentar ante 429 en vez de duplicar el transporte; (b) pasar los heredocs de Python de `prueba_hostil.sh`, `prueba_sesiones.sh` y `prueba_toolsets.sh` a scripts `.py` con funciones comunes `guardar()` y `salir()` (contrato único de códigos: 0 pasa, 1 falla, 2 no se pudo, 3 no concluyente); (c) un `levantar.sh` con `--con-red` en lugar del ritual de tres pasos de `compose.yml`; (d) fijar la versión de `alpine/socat` (FR-004); (e) comprobar `docker compose version` ≥ 2.24 por el `!reset`; (f) tras la primera corrida real, ver si el registro de Hermes muestra las llamadas a herramientas y simplificar la lista `NATIVAS` de T012; (g) `mem_limit: 2g` de Hermes puede quedarse corto en T015, revisarlo con T033
+- [ ] T051 Estudiar el consumo oculto de llamadas al modelo en Hermes: `tool_search`/`tool_describe` (Q17 gastó 10 llamadas con 9 intentos fallidos), el prompt de Hermes (~2.300 tokens por turno) y otras tareas auxiliares; evaluar si la carga perezosa de herramientas se puede apagar, y vigilar que Hermes no afirme cosas falsas (Q17, Q20) en T017
 
 ---
 
@@ -232,7 +233,7 @@ Task: "Escribir spike/measure/memoria.sh"
 
 ## Notes
 
-- Total: 48 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 7).
+- Total: 49 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 8).
 - La VM actual es provisional y compartida ([[ADR-009]]): sus resultados son provisionales hasta T047.
 - Todo es desechable salvo `resultados.md` y los ADR nuevos.
 - Datos solo sintéticos y modelos `:free` (Constitución IV); el bot nunca escribe primero (Constitución III).
