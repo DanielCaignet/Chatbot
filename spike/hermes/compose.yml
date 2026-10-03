@@ -27,6 +27,7 @@ services:
       API_SERVER_KEY: ${API_SERVER_KEY:?falta API_SERVER_KEY en spike/.env}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?falta OPENROUTER_API_KEY en spike/.env}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:?falta OPENROUTER_MODEL en spike/.env}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}   # proveedor principal (ADR-011); vacía si aún no hay llave
     volumes:
       - hermes-data:/opt/data
     networks:
