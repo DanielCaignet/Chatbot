@@ -62,12 +62,12 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] Crear `spike/hermes/compose.yml` y `spike/hermes/config.yaml`: `agent.disabled_toolsets` con todas las nativas, solo la MCP del SAS, contenedor **sin montajes del host**, `API_SERVER_KEY` por variable de entorno, **sin** `multiplex_profiles` [EXT:Hermes Agent api_server] (R1; FR-010, FR-012)
-- [ ] T011 [US1] Escribir y correr `spike/hermes/prueba_toolsets.sh`: `GET /v1/toolsets` no debe listar ninguna nativa; guardar la salida en `resultados.md` (FR-010)
-- [ ] T012 [P] [US1] Escribir y correr `spike/hermes/prueba_hostil.sh` con las consultas del grupo `hostil` (pedir comando, archivo, web, datos de otro cliente, cambio de instrucciones); verificar en el registro del contenedor que no se ejecutó nada (R2; FR-010)
-- [ ] T013 [US1] Escribir y correr `spike/hermes/prueba_sesiones.sh`: tres conversaciones con `X-Hermes-Session-Id` distintos; un dato inventado en la A no debe aparecer en la B (FR-011)
-- [ ] T014 [US1] Contención de red en `spike/hermes/red/`: red interna más proxy con lista blanca (proveedor de modelos y MCP); comprobar **desde dentro del contenedor** que otro destino falla y que no hay montajes del host (R10; FR-012)
-- [ ] T015 [US1] Escribir y correr `spike/hermes/prueba_429.py`: 12 solicitudes simultáneas contra el límite de 10; confirmar 429 en las excedentes y recuperación completa con reintento y espera creciente, sin pérdida ni duplicado; anotar si el límite aplica a `/v1/chat/completions` o solo a `/v1/runs` (R6; FR-013)
+- [x] T010 [US1] Crear `spike/hermes/compose.yml` y `spike/hermes/config.yaml`: `agent.disabled_toolsets` con todas las nativas, solo la MCP del SAS, contenedor **sin montajes del host**, `API_SERVER_KEY` por variable de entorno, **sin** `multiplex_profiles` [EXT:Hermes Agent api_server] (R1; FR-010, FR-012)
+- [ ] T011 [US1] Escribir y correr `spike/hermes/prueba_toolsets.sh`: `GET /v1/toolsets` no debe listar ninguna nativa; guardar la salida en `resultados.md` (FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
+- [ ] T012 [P] [US1] Escribir y correr `spike/hermes/prueba_hostil.sh` con las consultas del grupo `hostil` (pedir comando, archivo, web, datos de otro cliente, cambio de instrucciones); verificar en el registro del contenedor que no se ejecutó nada (R2; FR-010) **(escrito, falta correr: necesita la llave y la MCP)**
+- [ ] T013 [US1] Escribir y correr `spike/hermes/prueba_sesiones.sh`: tres conversaciones con `X-Hermes-Session-Id` distintos; un dato inventado en la A no debe aparecer en la B (FR-011) **(escrito, falta correr: necesita la llave y la MCP)**
+- [ ] T014 [US1] Contención de red en `spike/hermes/red/`: red interna más proxy con lista blanca (proveedor de modelos y MCP); comprobar **desde dentro del contenedor** que otro destino falla y que no hay montajes del host (R10; FR-012) **(escrito, falta correr: necesita la llave y la MCP)**
+- [ ] T015 [US1] Escribir y correr `spike/hermes/prueba_429.py`: 12 solicitudes simultáneas contra el límite de 10; confirmar 429 en las excedentes y recuperación completa con reintento y espera creciente, sin pérdida ni duplicado; anotar si el límite aplica a `/v1/chat/completions` o solo a `/v1/runs` (R6; FR-013) **(escrito, falta correr: necesita la llave y la MCP)**
 - [x] T016 [US1] Escribir `spike/baseline/bucle.py`: bucle de referencia mínimo con el mismo proveedor, modelo, herramientas MCP y banco (R3; FR-014)
 - [ ] T017 [US1] Correr el banco (≥20 consultas) en Hermes y en el bucle con `runner.py`; calcular tokens por llamada y su razón, y p50/p95 de latencia separando modelo de arnés; pasa si razón ≤ 2× y p95 < 15 s (R3–R5; FR-014, FR-015; depende de T008, T010, T016)
 - [ ] T018 [US1] Medir la memoria del arnés en reposo y bajo carga con `spike/measure/memoria.sh` (FR-016)
@@ -161,6 +161,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T045 Actualizar el nivel de SPEC-001 en `vault/MOCs/00 - Indice de Specs.md`, sobreescribir `STATE.md`, correr `graphify update .` y `graphify save-result` (cierre de fase de CLAUDE.md)
 - [ ] T046 Hacer los commits atómicos, subir la rama y actualizar el pull request siguiendo el ciclo de Git de `CLAUDE.md`; preguntar a Richard por `/thermos` antes de unir
 - [ ] T047 Cuando exista la VM definitiva ([[ADR-009]]), repetir allí V0 (`spike/vm/forma.sh`), V4 (`spike/measure/memoria.sh`), todas las mediciones de memoria y V5; reemplazar en `resultados.md` los valores provisionales por los de la VM definitiva y cerrar la nota de provisional (FR-001, FR-021, FR-022). **Se ejecuta antes de T042.**
+- [ ] T048 (mejoras no bloqueantes de `/thermos` sobre el PR 7, hacer antes de reutilizar los scripts en T017 y T033): (a) `cliente.chat()` debe usar `runner.post_chat` para reintentar ante 429 en vez de duplicar el transporte; (b) pasar los heredocs de Python de `prueba_hostil.sh`, `prueba_sesiones.sh` y `prueba_toolsets.sh` a scripts `.py` con funciones comunes `guardar()` y `salir()` (contrato único de códigos: 0 pasa, 1 falla, 2 no se pudo, 3 no concluyente); (c) un `levantar.sh` con `--con-red` en lugar del ritual de tres pasos de `compose.yml`; (d) fijar la versión de `alpine/socat` (FR-004); (e) comprobar `docker compose version` ≥ 2.24 por el `!reset`; (f) tras la primera corrida real, ver si el registro de Hermes muestra las llamadas a herramientas y simplificar la lista `NATIVAS` de T012; (g) `mem_limit: 2g` de Hermes puede quedarse corto en T015, revisarlo con T033
 
 ---
 
@@ -231,7 +232,7 @@ Task: "Escribir spike/measure/memoria.sh"
 
 ## Notes
 
-- Total: 47 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 6).
+- Total: 48 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 7).
 - La VM actual es provisional y compartida ([[ADR-009]]): sus resultados son provisionales hasta T047.
 - Todo es desechable salvo `resultados.md` y los ADR nuevos.
 - Datos solo sintéticos y modelos `:free` (Constitución IV); el bot nunca escribe primero (Constitución III).
