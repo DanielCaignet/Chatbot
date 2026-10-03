@@ -9,6 +9,8 @@
 #   docker compose --env-file ../.env config --quiet
 # Para la contención de red (T014) ver red/compose.red.yml; ejecutar siempre desde spike/hermes/.
 
+name: spike-hermes   # proyecto propio del spike; no mezclar con otros proyectos de la VM ([[ADR-009]])
+
 services:
   hermes:
     # Versión fija (FR-004). Soporta arm64, que es la arquitectura de la VM. Registrar el digest en resultados.md.
@@ -38,5 +40,7 @@ volumes:
   hermes-data:
 
 networks:
-  # Red propia; la Toolbox (T029) se une a ella con el nombre `toolbox`. T014 la vuelve interna.
+  # Red compartida con la Toolbox (spike/toolbox/compose.yml la declara como externa): en ella Hermes ve
+  # al servicio `toolbox` y a nadie más. Levantar este compose primero. T014 la vuelve interna.
   hermes-net:
+    name: spike-hermes

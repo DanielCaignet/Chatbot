@@ -107,7 +107,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 - [x] T027 [US3] Crear `spike/toolbox/esquema.sql` y `spike/toolbox/esquema.json`: tablas `producto(id, sku, nombre, categoria, precio, activo)` e `inventario(producto_id, cantidad)` con datos inventados, rol `lector` (solo SELECT) y rol `escritor` (solo para comprobar que el lector no puede escribir)
 - [x] T028 [P] [US3] Escribir `spike/toolbox/generar_tools.py` que genere `tools.yaml` desde `esquema.json` con herramientas `kind: tool` con `type: postgres-sql` (`catalogo_buscar`, `item_obtener`, `disponibilidad`), `statement` fijo con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases] (R7; FR-017; depende de T027)
-- [ ] T029 [US3] Crear `spike/toolbox/compose.yml` con Toolbox y Postgres con versiones fijadas, usando el rol `lector` en el `source`; nunca `--prebuilt=postgres` (FR-004, FR-019)
+- [x] T029 [US3] Crear `spike/toolbox/compose.yml` con Toolbox y Postgres con versiones fijadas, usando el rol `lector` en el `source`; nunca `--prebuilt=postgres` (FR-004, FR-019)
 - [ ] T030 [US3] Escribir y correr `spike/toolbox/ataques.sh`: comillas, `; DROP`, `UNION SELECT` y parámetros de tipo equivocado; ninguno debe alterar la consulta ni devolver datos fuera de lo declarado (R7; FR-018)
 - [ ] T031 [US3] Comprobar en `spike/toolbox/tools.yaml` y `spike/toolbox/compose.yml` que no existe ninguna vía de SQL libre y que un `INSERT` con el rol `lector` falla; anotar el resultado en `resultados.md` (FR-019)
 - [ ] T032 [US3] Dar el veredicto de las herramientas en `resultados.md` (filas V2 y §5): `go`, o `no-go` con MCP propio (FR-025)

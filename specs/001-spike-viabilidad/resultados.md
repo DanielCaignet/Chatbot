@@ -22,9 +22,9 @@
 | Modelo `:free` de OpenRouter (identificador exacto) | pendiente (T005) |
 | Versión o digest: Docker | 29.8.1 (Compose 5.5.1) |
 | Versión o digest: Hermes | imagen `nousresearch/hermes-agent:v2026.9.24` (arm64 confirmado); el digest se anota al descargarla |
-| Versión o digest: MCP Toolbox | pendiente |
+| Versión o digest: MCP Toolbox | imagen `toolbox:1.13.1` (arm64, build `e14cda6`) |
 | Versión o digest: Evolution API / Baileys | pendiente |
-| Versión: Postgres | pendiente |
+| Versión: Postgres | imagen `postgres:17.11-alpine` (arm64) |
 
 > **Provisional:** los resultados de V0, V4, memoria y V5 obtenidos en la VM provisional no valen como definitivos; se repiten en la VM definitiva (T047).
 

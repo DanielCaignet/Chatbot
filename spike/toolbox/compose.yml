@@ -1,0 +1,68 @@
+# T029 (SPEC-001, US3): MCP Toolbox con Postgres para el spike. Descartable.
+# Datos solo sintéticos (esquema.sql). Toolbox usa el rol `lector` (solo SELECT); nunca `--prebuilt=postgres`.
+#
+# Orden (desde spike/toolbox/, con spike/.env rellenado):
+#   1. python generar_tools.py                                      # genera tools.yaml (ya está en el repo)
+#   2. docker compose --env-file ../.env -f ../hermes/compose.yml up -d --no-start   # crea la red spike-hermes
+#   3. docker compose --env-file ../.env up -d
+# Validar sin arrancar (--quiet evita imprimir contraseñas):
+#   docker compose --env-file ../.env config --quiet
+# Parar y borrar solo lo del spike: docker compose --env-file ../.env down -v
+
+name: spike-toolbox   # proyecto propio del spike; no mezclar con otros proyectos de la VM ([[ADR-009]])
+
+services:
+  postgres:
+    image: postgres:17.11-alpine   # versión fija (FR-004); el esquema pide PostgreSQL 15 o superior (\getenv)
+    container_name: postgres-spike
+    restart: "no"
+    environment:
+      POSTGRES_DB: tienda
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_ADMIN:?falta POSTGRES_PASSWORD_ADMIN en spike/.env}
+      # esquema.sql lee estas dos con \getenv para crear los roles `lector` y `escritor`.
+      POSTGRES_PASSWORD_LECTOR: ${POSTGRES_PASSWORD_LECTOR:?falta POSTGRES_PASSWORD_LECTOR en spike/.env}
+      POSTGRES_PASSWORD_ESCRITOR: ${POSTGRES_PASSWORD_ESCRITOR:?falta POSTGRES_PASSWORD_ESCRITOR en spike/.env}
+    volumes:
+      - ./esquema.sql:/docker-entrypoint-initdb.d/01-esquema.sql:ro   # solo corre en la primera creación del volumen
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tienda"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    networks:
+      - toolbox-net   # Postgres no está en la red de Hermes: el agente solo llega a la Toolbox
+    mem_limit: 512m
+
+  toolbox:
+    image: us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:1.13.1   # versión fija; incluye arm64
+    container_name: toolbox-spike
+    restart: "no"
+    # --allowed-hosts / --allowed-origins sustituyen al comodín (*) por defecto, que permite ataques de DNS rebinding.
+    command: ["--config", "/app/tools.yaml", "--address", "0.0.0.0", "--disable-reload",
+              "--allowed-hosts", "toolbox:5000,localhost:5000,127.0.0.1:5000",
+              "--allowed-origins", "http://localhost:5000"]
+    environment:
+      # Solo la contraseña del lector. La del escritor y la del administrador no entran aquí (mínimo privilegio).
+      POSTGRES_PASSWORD_LECTOR: ${POSTGRES_PASSWORD_LECTOR:?falta POSTGRES_PASSWORD_LECTOR en spike/.env}
+    volumes:
+      - ./tools.yaml:/app/tools.yaml:ro
+    ports:
+      - "127.0.0.1:5000:5000"   # solo la VM; sirve a ataques.sh (T030). Hermes entra por la red, no por este puerto
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - toolbox-net
+      - hermes-net
+    mem_limit: 256m
+
+volumes:
+  postgres-data:
+
+networks:
+  toolbox-net:
+  hermes-net:
+    name: spike-hermes
+    external: true   # la crea spike/hermes/compose.yml

@@ -53,7 +53,7 @@ gateway:
     enabled: true
     max_concurrent_runs: 10   # tope por defecto; T015 lo prueba con 12 solicitudes
 
-# La única fuente de herramientas: la MCP de lectura (Toolbox, T029). Dirección por confirmar en T029.
+# La única fuente de herramientas: la MCP de lectura (Toolbox, T029). Dirección confirmada en T029 (initialize, tools/list y una llamada, desde la red de Hermes).
 mcp_servers:
   tienda:
     url: "http://toolbox:5000/mcp"
