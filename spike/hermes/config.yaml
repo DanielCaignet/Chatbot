@@ -8,6 +8,15 @@ model:
   provider: openrouter
   default: ${OPENROUTER_MODEL}
 
+# Respaldos gratuitos ([[ADR-010]]): Hermes cambia de modelo ante límite de cuota (429), error del servidor
+# o fallo de autenticación. Sirve cuando falla el proveedor de UN modelo; no sirve si se agota el tope diario
+# de la cuenta, que es común a todos los :free. Cada cambio debe quedar anotado en resultados.md.
+fallback_providers:
+  - provider: openrouter
+    model: qwen/qwen3.8-27b:free
+  - provider: openrouter
+    model: google/gemma-4-31b-it:free
+
 agent:
   # Todas las toolsets núcleo de la referencia, para que el agente solo pueda usar la MCP de la tienda.
   # `agent.disabled_toolsets` se aplica después de la config por plataforma, así que gana siempre.

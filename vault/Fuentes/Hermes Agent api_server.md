@@ -29,6 +29,7 @@ Contrato de integración del arnés ([[ADR-002]]).
 - `GET /v1/toolsets` devuelve una lista de `{name, enabled, tools[]}`; `X-Hermes-Session-Id` en Chat Completions continúa la sesión con su historial del servidor [Seguro, misma doc].
 - Docker: imagen `nousresearch/hermes-agent` (etiqueta de versión `v2026.9.24`, amd64 y arm64), datos en `/opt/data`, `gateway run`; el arranque siembra `config.yaml` si falta; MCP por `mcp_servers.<nombre>.url` con `tools.include` [Seguro, https://hermes-agent.nousresearch.com/docs/user-guide/docker y /features/mcp, leídas 2026-10-03].
 - `${VAR}` se expande en `config.yaml`; una variable no definida queda literal y solo avisa en el registro, así que un `OPENROUTER_MODEL` vacío no falla al arrancar [Seguro, https://hermes-agent.nousresearch.com/docs/user-guide/configuration, leída 2026-10-03].
+- Respaldo de modelo: lista `fallback_providers` de `{provider, model}` en `config.yaml`; cambia ante 429, errores del servidor o de autenticación, a mitad de sesión y sin perder la conversación; la activación es única por sesión [Seguro, https://hermes-agent.nousresearch.com/docs/integrations/providers, leída 2026-10-03].
 - Sin confirmar: que el cliente de modelos de Hermes respete `HTTPS_PROXY`; lo mide T014 [Adivinando].
 
 ## Conceptos

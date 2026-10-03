@@ -20,3 +20,4 @@ actualizado: 2026-10-01
 | [[ADR-007]] | Modelo local descartado para el agente | accepted | 2026-10-01 |
 | [[ADR-008]] | Antigravity: prueba de descarte | accepted | 2026-10-01 |
 | [[ADR-009]] | Spike F1 en una VM provisional compartida | accepted | 2026-10-03 |
+| [[ADR-010]] | Modelos :free de desarrollo: principal y respaldos | accepted | 2026-10-03 |
