@@ -1,0 +1,69 @@
+# GENERADO por spike/toolbox/generar_tools.py desde esquema.json. No editar a mano.
+# Cada documento es JSON (YAML válido). Contraseña por variable de entorno.
+{
+  "kind": "source",
+  "name": "tienda-lector",
+  "type": "postgres",
+  "host": "postgres",
+  "port": 5432,
+  "database": "tienda",
+  "user": "lector",
+  "password": "${POSTGRES_PASSWORD_LECTOR}"
+}
+---
+{
+  "kind": "tool",
+  "name": "catalogo_buscar",
+  "type": "postgres-sql",
+  "source": "tienda-lector",
+  "description": "Busca productos activos por nombre o categoría. Recibe un texto corto (por ejemplo 'polera' o 'zapatillas blancas') y devuelve hasta 10 coincidencias con su código (sku), nombre, categoría y precio. No inventes productos: si no devuelve nada, el producto no existe.",
+  "parameters": [
+    {
+      "name": "texto",
+      "type": "string",
+      "description": "Texto corto a buscar en nombre o categoría.",
+      "allowedValues": [
+        "^[A-Za-z0-9áéíóúñÁÉÍÓÚÑ .-]{1,60}$"
+      ]
+    }
+  ],
+  "statement": "SELECT sku, nombre, categoria, precio FROM producto WHERE (nombre ILIKE '%' || $1 || '%' OR categoria ILIKE '%' || $1 || '%') AND activo ORDER BY nombre LIMIT 10"
+}
+---
+{
+  "kind": "tool",
+  "name": "item_obtener",
+  "type": "postgres-sql",
+  "source": "tienda-lector",
+  "description": "Devuelve un producto activo a partir de su código (sku): nombre, categoría y precio. Usa el código exacto que devolvió catalogo_buscar; no lo adivines.",
+  "parameters": [
+    {
+      "name": "sku",
+      "type": "string",
+      "description": "Código exacto del producto.",
+      "allowedValues": [
+        "^[A-Za-z0-9-]{1,32}$"
+      ]
+    }
+  ],
+  "statement": "SELECT sku, nombre, categoria, precio FROM producto WHERE sku = $1 AND activo"
+}
+---
+{
+  "kind": "tool",
+  "name": "disponibilidad",
+  "type": "postgres-sql",
+  "source": "tienda-lector",
+  "description": "Devuelve cuántas unidades hay de un producto activo a partir de su código (sku). Usa el código exacto que devolvió catalogo_buscar; no lo adivines.",
+  "parameters": [
+    {
+      "name": "sku",
+      "type": "string",
+      "description": "Código exacto del producto.",
+      "allowedValues": [
+        "^[A-Za-z0-9-]{1,32}$"
+      ]
+    }
+  ],
+  "statement": "SELECT p.sku, p.nombre, i.cantidad FROM inventario i JOIN producto p ON i.producto_id = p.id WHERE p.sku = $1 AND p.activo"
+}
