@@ -162,6 +162,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T046 Hacer los commits atómicos, subir la rama y actualizar el pull request siguiendo el ciclo de Git de `CLAUDE.md`; preguntar a Richard por `/thermos` antes de unir
 - [ ] T047 Cuando exista la VM definitiva ([[ADR-009]]), repetir allí V0 (`spike/vm/forma.sh`), V4 (`spike/measure/memoria.sh`), todas las mediciones de memoria y V5; reemplazar en `resultados.md` los valores provisionales por los de la VM definitiva y cerrar la nota de provisional (FR-001, FR-021, FR-022). **Se ejecuta antes de T042.**
 - [ ] T048 (mejoras no bloqueantes de `/thermos` sobre el PR 7, hacer antes de reutilizar los scripts en T017 y T033): (a) `cliente.chat()` debe usar `runner.post_chat` para reintentar ante 429 en vez de duplicar el transporte; (b) pasar los heredocs de Python de `prueba_hostil.sh`, `prueba_sesiones.sh` y `prueba_toolsets.sh` a scripts `.py` con funciones comunes `guardar()` y `salir()` (contrato único de códigos: 0 pasa, 1 falla, 2 no se pudo, 3 no concluyente); (c) un `levantar.sh` con `--con-red` en lugar del ritual de tres pasos de `compose.yml`; (d) fijar la versión de `alpine/socat` (FR-004); (e) comprobar `docker compose version` ≥ 2.24 por el `!reset`; (f) tras la primera corrida real, ver si el registro de Hermes muestra las llamadas a herramientas y simplificar la lista `NATIVAS` de T012; (g) `mem_limit: 2g` de Hermes puede quedarse corto en T015, revisarlo con T033
+- [ ] T051 Con la cuota repuesta: repetir T015 (`prueba_429.py`) para cerrar "sin pérdida ni duplicado"; y estudiar el consumo oculto de llamadas al modelo en Hermes: `tool_search`/`tool_describe` (Q17 gastó 10 llamadas con 9 intentos fallidos), el prompt de Hermes (~2.300 tokens por turno) y otras tareas auxiliares; evaluar si la carga perezosa de herramientas se puede apagar, y vigilar que Hermes no afirme cosas falsas (Q17, Q20) en T017
 
 ---
 
@@ -232,7 +233,7 @@ Task: "Escribir spike/measure/memoria.sh"
 
 ## Notes
 
-- Total: 48 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 7).
+- Total: 49 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 8).
 - La VM actual es provisional y compartida ([[ADR-009]]): sus resultados son provisionales hasta T047.
 - Todo es desechable salvo `resultados.md` y los ADR nuevos.
 - Datos solo sintéticos y modelos `:free` (Constitución IV); el bot nunca escribe primero (Constitución III).
