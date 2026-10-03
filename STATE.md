@@ -16,8 +16,9 @@ F0 cerrada: Spec Kit + vault + grafo montados. Entrevista hecha; constitución v
 Plan maestro aprobado: `docs/PLAN-MAESTRO.md`. Traspaso a Richard: `docs/COMO-CONTINUAR.md`.
 
 ## Spec activo
-[[SPEC-001]] spike de viabilidad F1 (N0, borrador): `specs/001-spike-viabilidad/spec.md`.
-Sin marcadores abiertos: meta de desarrollo = 4 clientes por VM (FR-022).
+[[SPEC-001]] spike de viabilidad F1 (N0): `specs/001-spike-viabilidad/spec.md`. Spec, plan y
+tareas ya unidos a `main` (PR 1). Meta de desarrollo = 4 clientes por VM (FR-022).
+Hecho: T001–T003, T007 y T037. **Antigravity descartado por el criterio 6** [Probable]; ADR en T043.
 
 ## Bloqueos
 - Falta acceso a la Oracle VM (host, usuario, llave SSH) para el spike y para verificar su tamaño
@@ -27,9 +28,7 @@ Sin marcadores abiertos: meta de desarrollo = 4 clientes por VM (FR-022).
   tendrá en varios días: solo bloquea la verificación (a); el resto del spike puede avanzar.
 
 ## Proximo paso
-Spec, plan y tareas de SPEC-001 listos (`specs/001-spike-viabilidad/tasks.md`, 46 tareas).
-Siguiente: entregar los insumos (T004 acceso SSH a la VM, T005 llave OpenRouter) y ejecutar con
-`speckit-implement`. Orden recomendado: Setup → Foundational → US5-T037 (leer términos de
-Antigravity; la cláusula 6 apunta a descarte [Probable]) → US3 herramientas → US1 Hermes →
-US4 cupo → US2 canal (espera la línea) → cierre.
-PR abierto: https://github.com/DanielCaignet/Chatbot/pull/1 (rama `001-spike-viabilidad`).
+Sin la VM se puede escribir ya: T008 `runner.py`, T009 `memoria.sh`, T027–T028 (esquema y
+generador de `tools.yaml`) y T016 (bucle de referencia). Con la VM y la llave: T006, T029+ y US1.
+Tareas en `specs/001-spike-viabilidad/tasks.md`; mediciones en `resultados.md`.
+Rama de trabajo: `001-spike-ejecucion` (PR 2 abierto).

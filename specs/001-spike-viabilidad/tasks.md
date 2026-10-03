@@ -31,9 +31,9 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 **Purpose**: estructura del spike y del archivo de resultados
 
-- [ ] T001 Crear la estructura `spike/{vm,toolbox,hermes,baseline,evolution,bench,measure}/` y `spike/README.md` con una línea que declare que todo es descartable
-- [ ] T002 [P] Crear `specs/001-spike-viabilidad/resultados.md` con las cinco secciones de `contracts/resultados-tabla.md` (Entorno, Verificaciones, Antigravity, Cupo, Veredictos) y todas las filas en `pendiente`
-- [ ] T003 [P] Agregar `spike/**/.env` al `.gitignore` y crear `spike/.env.example` con los nombres de variables sin valores (`OPENROUTER_API_KEY`, `API_SERVER_KEY`, etc.)
+- [x] T001 Crear la estructura `spike/{vm,toolbox,hermes,baseline,evolution,bench,measure}/` y `spike/README.md` con una línea que declare que todo es descartable
+- [x] T002 [P] Crear `specs/001-spike-viabilidad/resultados.md` con las cinco secciones de `contracts/resultados-tabla.md` (Entorno, Verificaciones, Antigravity, Cupo, Veredictos) y todas las filas en `pendiente`
+- [x] T003 [P] (el `.gitignore` ya excluía `.env` en cualquier carpeta; verificado con `git check-ignore`) Crear `spike/.env.example` con los nombres de variables sin valores (`OPENROUTER_API_KEY`, `API_SERVER_KEY`, etc.)
 
 ---
 
@@ -46,7 +46,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T004 (Richard) Entregar acceso SSH a la Oracle VM (host, usuario, llave) y registrar en `resultados.md` §1 solo "acceso: sí/no" (nunca la llave); sin acceso, marcar V0 `bloqueada`
 - [ ] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
 - [ ] T006 V0: escribir `spike/vm/forma.sh` que registre arquitectura, núcleos, memoria, disco, sistema operativo y versiones de Docker y Python; ejecutarlo en la VM y pegar la salida en `resultados.md` §1; contrastar con 2 OCPU / 12 GB [EXT:Oracle Always Free] (FR-001, FR-004)
-- [ ] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
+- [x] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
 - [ ] T008 Escribir `spike/bench/runner.py` que ejecute el banco contra un endpoint compatible con OpenAI y guarde por consulta: tiempo total, tiempo del modelo, `prompt_tokens`, `completion_tokens` y si hubo 429 del proveedor o del arnés, en `spike/bench/salida/*.json` (R4, R5; depende de T007)
 - [ ] T009 [P] Escribir `spike/measure/memoria.sh` que capture memoria (RSS) y CPU por contenedor en reposo, bajo carga y en ráfaga, y guarde un CSV en `spike/measure/salida/`
 
@@ -141,11 +141,11 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 ### Implementation for User Story 5
 
-- [ ] T037 [US5] Criterio 6: citar la cláusula 6 de los términos en la tabla de `resultados.md` §3 con `[EXT:Antigravity terminos]` y dar el veredicto; si falla, marcar "descartado por criterio 6" y las demás filas como `no probado` (R11; FR-023)
-- [ ] T038 [US5] Solo si T037 no descartó: criterios 1 y 5, invocar Antigravity sin interfaz gráfica ni sesión interactiva desde la VM con `spike/bench/antigravity.sh` y anotar la evidencia en `resultados.md` §3 (R11; FR-023)
-- [ ] T039 [US5] Solo si sigue: criterios 2, 3 y 4 (≥3 conversaciones aisladas, p95 < 15 s, uso de la MCP del SAS) con el banco de `spike/bench/banco.json` (FR-023)
-- [ ] T040 [US5] Solo si pasa los seis: comparar con el arnés sobre el mismo banco y registrar la comparación en `resultados.md` §3 (FR-024)
-- [ ] T041 [US5] Completar en `resultados.md` §3 la tabla pasa/falla/no probado con evidencia por fila y anotar el criterio que descartó (FR-023)
+- [x] T037 [US5] Criterio 6: citar la cláusula 6 de los términos en la tabla de `resultados.md` §3 con `[EXT:Antigravity terminos]` y dar el veredicto; si falla, marcar "descartado por criterio 6" y las demás filas como `no probado` (R11; FR-023)
+- [x] T038 [US5] Solo si T037 no descartó: criterios 1 y 5, invocar Antigravity sin interfaz gráfica ni sesión interactiva desde la VM con `spike/bench/antigravity.sh` y anotar la evidencia en `resultados.md` §3 (R11; FR-023) **(no aplica: T037 descartó Antigravity)**
+- [x] T039 [US5] Solo si sigue: criterios 2, 3 y 4 (≥3 conversaciones aisladas, p95 < 15 s, uso de la MCP del SAS) con el banco de `spike/bench/banco.json` (FR-023) **(no aplica: T037 descartó Antigravity)**
+- [x] T040 [US5] Solo si pasa los seis: comparar con el arnés sobre el mismo banco y registrar la comparación en `resultados.md` §3 (FR-024) **(no aplica: T037 descartó Antigravity)**
+- [x] T041 [US5] Completar en `resultados.md` §3 la tabla pasa/falla/no probado con evidencia por fila y anotar el criterio que descartó (FR-023)
 
 **Checkpoint**: Antigravity con veredicto de descarte o de continuidad.
 
