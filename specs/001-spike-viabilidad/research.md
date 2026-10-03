@@ -32,7 +32,7 @@ Cada decisión cita su ficha en `vault/Fuentes/`. Lo que depende de la VM real s
 - **Incógnita** `[Adivinando]`: si el límite aplica a `/v1/chat/completions` o solo a las ejecuciones largas (`/v1/runs`). V3 lo comprueba y lo anota en la ficha.
 
 ## R7 — Herramientas de lectura con MCP Toolbox
-- **Decisión**: generar `tools.yaml` desde una descripción del esquema sintético (`catalogo_buscar`, `item_obtener`, `disponibilidad`) con herramientas `kind: postgres-sql`, `statement` con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases]. Solo-lectura con un rol de Postgres sin permisos de escritura.
+- **Decisión**: generar `tools.yaml` desde una descripción del esquema sintético (`catalogo_buscar`, `item_obtener`, `disponibilidad`) con herramientas `kind: tool` con `type: postgres-sql`, `statement` con `$1…` y `parameters` tipados [EXT:MCP Toolbox for Databases]. Solo-lectura con un rol de Postgres sin permisos de escritura.
 - **Ataques**: comillas, `; DROP`, `UNION SELECT`, parámetros fuera de tipo, intento de `INSERT` con el rol de lectura.
 - **Prohibido**: `--prebuilt=postgres` (incluye SQL libre).
 - **Plan B si falla**: MCP propio (ADR-005).
