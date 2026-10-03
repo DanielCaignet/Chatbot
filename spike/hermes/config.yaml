@@ -49,6 +49,11 @@ agent:
     - x_search
     - yuanbao
 
+# Cada sesión nueva gastaba una solicitud extra del modelo solo para ponerle título; con 50 por día no sobra.
+auxiliary:
+  title_generation:
+    enabled: false
+
 gateway:
   # Sin `multiplex_profiles`: con él el api_server reactiva las toolsets apagadas
   # (https://github.com/NousResearch/hermes-agent/issues/91415). Un contenedor por cliente.
