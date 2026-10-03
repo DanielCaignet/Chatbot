@@ -69,7 +69,11 @@ def main():
 
     def trabajo(n):
         puerta.wait()  # arrancan todas a la vez
-        lanzar(n, marca, args, resultados)
+        try:
+            lanzar(n, marca, args, resultados)
+        except Exception as e:  # un hilo caído no puede desaparecer del conteo
+            resultados[n] = {"ficha": f"ECO{n:02d}", "eventos_429": [], "texto": None,
+                             "error": f"{type(e).__name__}: {e}", "estado": None}
 
     t0 = time.monotonic()
     for n in range(args.solicitudes):
@@ -95,17 +99,20 @@ def main():
         print("veredicto:", veredicto, "(el tope aplica a /v1/runs)" if con_429 else "(no se vio 429)")
         return 0 if con_429 else 3
 
-    con_429 = [n for n, r in resultados.items() if r["eventos_429"]]
+    # Solo cuenta el 429 del arnés: uno del proveedor :free no prueba el tope de 10 del api_server.
+    con_429 = [n for n, r in resultados.items() if any(e["origen"] == "arnes" for e in r["eventos_429"])]
+    del_proveedor = [n for n, r in resultados.items() if any(e["origen"] == "proveedor" for e in r["eventos_429"])]
     perdidas = [n for n, r in resultados.items() if r["error"] or r["texto"] is None]
     fichas = [r["ficha"] for r in resultados.values()]
     propias = [n for n, r in resultados.items() if r["texto"] and r["ficha"] in r["texto"]]
     cruzadas = [n for n, r in resultados.items()
                 if r["texto"] and any(f in r["texto"] for f in fichas if f != r["ficha"])]
-    duplicadas = len(propias) != len(set(propias)) or len(set(fichas)) != len(fichas)
+    # Cada solicitud debe volver con su propia ficha. Una respuesta de otra, o sin ninguna, es pérdida o cruce.
+    ajenas = [n for n in range(args.solicitudes) if n not in propias]
     max_espera = max((e["espera_s"] for r in resultados.values() for e in r["eventos_429"]), default=0)
     recuperadas = [n for n in con_429 if n not in perdidas]
 
-    if perdidas or cruzadas or duplicadas:
+    if perdidas or cruzadas or ajenas or len(resultados) != args.solicitudes:
         veredicto = "falla"
     elif not con_429:
         veredicto = "no concluyente"
@@ -113,17 +120,17 @@ def main():
         veredicto = "pasa"
     archivo.write_text(json.dumps({
         "endpoint": "chat", "veredicto": veredicto, "solicitudes": args.solicitudes,
-        "con_429": len(con_429), "recuperadas_tras_429": len(recuperadas), "perdidas": perdidas,
-        "respuestas_cruzadas": cruzadas, "espera_maxima_s": max_espera, "duracion_s": duracion,
+        "con_429_del_arnes": len(con_429), "con_429_del_proveedor": len(del_proveedor), "recuperadas_tras_429": len(recuperadas), "perdidas": perdidas,
+        "respuestas_cruzadas": cruzadas, "sin_su_ficha": ajenas, "espera_maxima_s": max_espera, "duracion_s": duracion,
         "detalle": resultados}, ensure_ascii=False, indent=2), encoding="utf-8")
 
     print(f"/v1/chat/completions: {args.solicitudes} solicitudes en {duracion}s")
-    print(f"  con al menos un 429: {len(con_429)} | recuperadas tras 429: {len(recuperadas)} | perdidas: {len(perdidas)}")
-    print(f"  respuestas propias: {len(propias)}/{args.solicitudes} | cruzadas: {len(cruzadas)} | duplicadas: {'sí' if duplicadas else 'no'}")
+    print(f"  429 del arnés: {len(con_429)} | del proveedor: {len(del_proveedor)} | recuperadas tras 429: {len(recuperadas)} | perdidas: {len(perdidas)}")
+    print(f"  respuestas propias: {len(propias)}/{args.solicitudes} | cruzadas: {len(cruzadas)} | sin su ficha: {len(ajenas)}")
     print(f"  espera máxima entre reintentos: {max_espera}s")
     print("veredicto:", veredicto)
     if veredicto == "no concluyente":
-        print("  no hubo 429: las ejecuciones no llegaron a solaparse 10 a la vez. Repetir con más solicitudes (--solicitudes 20).")
+        print("  no hubo 429 del arnés: las ejecuciones no llegaron a solaparse 10 a la vez. Repetir con más solicitudes (--solicitudes 20).")
     return {"pasa": 0, "falla": 1}.get(veredicto, 3)
 
 

@@ -5,8 +5,9 @@
 #   docker compose --env-file ../.env up -d --no-start
 #   docker cp config.yaml hermes-spike:/opt/data/config.yaml
 #   docker compose --env-file ../.env start
-# Validar sin arrancar nada (ensayo en seco):
+# Validar sin arrancar nada (ensayo en seco; --quiet evita que `config` imprima las llaves):
 #   docker compose --env-file ../.env config --quiet
+# Para la contención de red (T014) ver red/compose.red.yml; ejecutar siempre desde spike/hermes/.
 
 services:
   hermes:

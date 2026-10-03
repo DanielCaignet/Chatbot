@@ -1,7 +1,7 @@
 ---
 tipo: moc
 titulo: "Indice de Fuentes"
-actualizado: 2026-10-01
+actualizado: 2026-10-03
 ---
 
 # Indice de Fuentes — chatbot-richard

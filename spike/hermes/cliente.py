@@ -4,11 +4,14 @@
   cliente.py get /v1/toolsets
   cliente.py chat --sesion <id> --texto "<mensaje>" [--sistema ruta.txt]
 
-Imprime una línea JSON: {"estado": <HTTP o null>, "cuerpo": ..., "texto": ..., "error": ...}.
+Imprime una línea JSON. `get`: {"estado", "cuerpo", "error"}. `chat`: {"estado", "texto", "error"}.
+`estado` es el código HTTP, o null si no hubo respuesta.
 La llave sale de API_SERVER_KEY o, si falta, de spike/.env; nunca se imprime ni va como argumento.
+Si falta la llave sale con código 2 ("no se pudo ejecutar"), que no se confunde con un "falla" (1).
 Dirección: HERMES_URL (por defecto http://127.0.0.1:8642).
 """
 import argparse
+import functools
 import json
 import os
 import sys
@@ -20,15 +23,19 @@ AQUI = Path(__file__).resolve().parent
 TIMEOUT_S = 180
 
 
+@functools.cache
 def leer_llave():
     llave = os.environ.get("API_SERVER_KEY", "")
     entorno = AQUI.parent / ".env"
     if not llave and entorno.exists():
         for linea in entorno.read_text(encoding="utf-8").splitlines():
+            linea = linea.removeprefix("export ")
             if linea.startswith("API_SERVER_KEY="):
-                llave = linea.split("=", 1)[1].strip()
+                # Docker Compose acepta comillas en el .env; aquí se quitan igual para que ambos lean la misma llave.
+                llave = linea.split("=", 1)[1].strip().strip("\"'")
     if not llave:
-        raise SystemExit("falta API_SERVER_KEY (variable de entorno o spike/.env)")
+        print("falta API_SERVER_KEY (variable de entorno o spike/.env)", file=sys.stderr)
+        raise SystemExit(2)
     return llave
 
 

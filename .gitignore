@@ -10,3 +10,5 @@ graphify-out/
 .env
 .env.*
 !.env.example
+# salidas crudas de las pruebas del spike (respuestas de modelo y registros): a resultados.md solo va un resumen
+spike/**/salida/

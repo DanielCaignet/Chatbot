@@ -1,8 +1,12 @@
-# T014 (SPEC-001, FR-012, R10): contención de red de Hermes. Se suma a ../compose.yml:
-#   docker compose --env-file ../../.env -f ../compose.yml -f compose.red.yml up -d --no-start
-#   docker cp ../config.yaml hermes-spike:/opt/data/config.yaml
-#   docker compose --env-file ../../.env -f ../compose.yml -f compose.red.yml start
-# (ejecutar desde spike/hermes/red/)
+# T014 (SPEC-001, FR-012, R10): contención de red de Hermes. Se suma a compose.yml.
+# Ejecutar SIEMPRE desde spike/hermes/ (Compose resuelve las rutas relativas desde la carpeta del primer -f):
+#   docker compose --env-file ../.env down            # sin -v: conserva hermes-data; la red cambia a interna
+#   docker compose --env-file ../.env -f compose.yml -f red/compose.red.yml up -d --no-start
+#   docker cp config.yaml hermes-spike:/opt/data/config.yaml
+#   docker compose --env-file ../.env -f compose.yml -f red/compose.red.yml start
+# Requiere Docker Compose 2.24 o posterior (`!reset`); comprobar con `docker compose version`.
+# Para validar sin imprimir las llaves: añadir `config --quiet` (sin --quiet, `config` las muestra).
+# Primer arranque: mirar `docker logs proxy-spike` antes de correr red/prueba_contencion.sh.
 #
 # hermes-net pasa a ser interna: sin ruta a Internet. El proveedor se alcanza solo por el proxy.
 # `puerta` reenvía 127.0.0.1:8642 de la VM a Hermes, porque Docker no publica puertos de redes internas.
@@ -22,7 +26,7 @@ services:
     container_name: proxy-spike
     restart: "no"
     volumes:
-      - ./squid.conf:/etc/squid/squid.conf:ro   # el montaje es del proxy, no de Hermes
+      - ./red/squid.conf:/etc/squid/squid.conf:ro   # el montaje es del proxy, no de Hermes
     networks:
       hermes-net:
         aliases: [proxy]
