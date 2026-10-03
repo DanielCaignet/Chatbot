@@ -27,6 +27,9 @@ Sin marcadores abiertos: meta de desarrollo = 4 clientes por VM (FR-022).
   tendrá en varios días: solo bloquea la verificación (a); el resto del spike puede avanzar.
 
 ## Proximo paso
-Plan de SPEC-001 listo (`specs/001-spike-viabilidad/plan.md`). Siguiente: `speckit-tasks`.
-Orden del spike: V0 VM → V1 Antigravity (leer términos primero; la cláusula 6 apunta a descarte
-[Probable]) → V2 herramientas → V3 Hermes → V4 cupo → V5 canal (espera el número) → V6 veredictos.
+Spec, plan y tareas de SPEC-001 listos (`specs/001-spike-viabilidad/tasks.md`, 46 tareas).
+Siguiente: entregar los insumos (T004 acceso SSH a la VM, T005 llave OpenRouter) y ejecutar con
+`speckit-implement`. Orden recomendado: Setup → Foundational → US5-T037 (leer términos de
+Antigravity; la cláusula 6 apunta a descarte [Probable]) → US3 herramientas → US1 Hermes →
+US4 cupo → US2 canal (espera la línea) → cierre.
+PR abierto: https://github.com/DanielCaignet/Chatbot/pull/1 (rama `001-spike-viabilidad`).
