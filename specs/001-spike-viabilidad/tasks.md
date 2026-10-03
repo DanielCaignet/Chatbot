@@ -44,7 +44,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 **⚠️ CRITICAL**: ninguna historia puede dar un veredicto sin esta fase. Si falta un insumo, la tarea correspondiente queda `bloqueada` con su causa (FR-027); no se omite.
 
 - [x] T004 (Richard) Entregar acceso SSH a la Oracle VM (host, usuario, llave) y registrar en `resultados.md` §1 solo "acceso: sí/no" (nunca la llave); sin acceso, marcar V0 `bloqueada`
-- [ ] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
+- [x] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
 - [x] T006 V0: escribir `spike/vm/forma.sh` que registre arquitectura, núcleos, memoria, disco, sistema operativo y versiones de Docker y Python; ejecutarlo en la VM y pegar la salida en `resultados.md` §1; contrastar con 2 OCPU / 12 GB [EXT:Oracle Always Free] (FR-001, FR-004)
 - [x] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
 - [x] T008 Escribir `spike/bench/runner.py` que ejecute el banco contra un endpoint compatible con OpenAI y guarde por consulta: tiempo total, tiempo del modelo, `prompt_tokens`, `completion_tokens` y si hubo 429 del proveedor o del arnés, en `spike/bench/salida/*.json` (R4, R5; depende de T007)

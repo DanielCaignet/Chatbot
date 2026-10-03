@@ -20,6 +20,7 @@
 | Python del sistema | 3.9.25 |
 | Contenedores en ejecución (cualquier proyecto) | 2 |
 | Modelo `:free` de OpenRouter (identificador exacto) | `nvidia/nemotron-3-super-120b-a12b:free` (principal, [[ADR-010]]); respaldos `qwen/qwen3.8-27b:free` y `google/gemma-4-31b-it:free` |
+| Tope diario de solicitudes a `:free` (medido 2026-10-03, sin créditos) | 50 por día, común a todos los modelos; 0 usadas al medir |
 | Versión o digest: Docker | 29.8.1 (Compose 5.5.1) |
 | Versión o digest: Hermes | imagen `nousresearch/hermes-agent:v2026.9.24` (arm64 confirmado); el digest se anota al descargarla |
 | Versión o digest: MCP Toolbox | pendiente |

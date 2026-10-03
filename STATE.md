@@ -25,16 +25,16 @@ Modelo ([[ADR-010]]): `nvidia/nemotron-3-super-120b-a12b:free`, respaldos Qwen y
 ## Bloqueos
 - VM provisional ([[ADR-009]]): SSH, Docker y Python listos; ARM, 2 núcleos, 10,9 GiB, 8,4 GB de
   disco libres, compartida. Hermes pesa ~1 GB comprimido: medir el disco antes de bajarlo.
-- **T005 (Richard):** la cuenta de OpenRouter existe; falta pegar la llave en `spike/.env`. Sin ella
-  no corren T011–T015 contra el modelo ni T017. `API_SERVER_KEY` y claves de Postgres siguen vacías.
-- **Tope diario de los `:free`:** común a todos los modelos; de memoria ~50 por día sin créditos y
-  T017 solo no cabe [Probable]. Falta leer el valor real (`GET /api/v1/key`) y decidir: repartir en
-  días, comprar el mínimo de créditos o sumar otro proveedor ([[ADR-010]]).
+- **T005 hecha:** llave de OpenRouter en `spike/.env`, válida (comprobada). `API_SERVER_KEY` y claves
+  de Postgres siguen vacías.
+- **Tope diario de los `:free`: 50 solicitudes por día**, común a todos los modelos [Seguro, medido].
+  El spike pide ~150-200 (T012, T013, T015, T017 y el bucle de referencia): hay que repartirlo en días,
+  comprar créditos mínimos o sumar otro proveedor. Decide Richard ([[ADR-010]]).
 - Falta la MCP de lectura (T029–T031); T012 la usa como control.
 - Falta un número de WhatsApp dedicado de prueba (no VoIP); solo bloquea V5.
 
 ## Proximo paso
-1. Richard pega la llave y decide qué hacer con el tope diario.
+1. Richard decide qué hacer con el tope diario de 50.
 2. T029–T031 (Toolbox en la VM); luego levantar Hermes y correr T011–T015 y T017.
 Tareas en `specs/001-spike-viabilidad/tasks.md`; mediciones en `resultados.md`.
-Rama de trabajo: `docs/adr-010-modelos-free` (PR por abrir).
+Rama de trabajo: `docs/adr-010-modelos-free` (PR 8 abierto).
