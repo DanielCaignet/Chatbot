@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "descripcion": "Descripción del esquema sintético de tienda. De aquí sale tools.yaml (generar_tools.py): las herramientas no se escriben a mano.",
+  "origen": {
+    "nombre": "tienda-lector",
+    "host": "postgres",
+    "puerto": 5432,
+    "base": "tienda",
+    "usuario": "lector",
+    "clave_env": "POSTGRES_PASSWORD_LECTOR"
+  },
+  "tablas": {
+    "producto": {
+      "columnas": {
+        "id": "integer", "sku": "text", "nombre": "text",
+        "categoria": "text", "precio": "numeric", "activo": "boolean"
+      },
+      "clave": "sku",
+      "buscables": ["nombre", "categoria"],
+      "visibles": ["sku", "nombre", "categoria", "precio"],
+      "columna_activo": "activo"
+    },
+    "inventario": {
+      "columnas": { "producto_id": "integer", "cantidad": "integer" },
+      "referencia": { "columna": "producto_id", "tabla": "producto", "columna_destino": "id" }
+    }
+  },
+  "herramientas": [
+    {
+      "nombre": "catalogo_buscar",
+      "patron": "buscar",
+      "tabla": "producto",
+      "limite": 10,
+      "descripcion": "Busca productos activos por nombre o categoría. Recibe un texto corto (por ejemplo 'polera' o 'zapatillas blancas') y devuelve hasta 10 coincidencias con su código (sku), nombre, categoría y precio. No inventes productos: si no devuelve nada, el producto no existe."
+    },
+    {
+      "nombre": "item_obtener",
+      "patron": "obtener",
+      "tabla": "producto",
+      "descripcion": "Devuelve un producto activo a partir de su código (sku): nombre, categoría y precio. Usa el código exacto que devolvió catalogo_buscar; no lo adivines."
+    },
+    {
+      "nombre": "disponibilidad",
+      "patron": "existencias",
+      "tabla": "inventario",
+      "columnas_padre": ["sku", "nombre"],
+      "columnas_propias": ["cantidad"],
+      "descripcion": "Devuelve cuántas unidades hay de un producto activo a partir de su código (sku). Usa el código exacto que devolvió catalogo_buscar; no lo adivines."
+    }
+  ]
+}
