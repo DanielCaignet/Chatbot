@@ -1,0 +1,63 @@
+# T010 (SPEC-001, US1): configuración de Hermes para el spike. Descartable.
+# Fuentes: [EXT:Hermes Agent api_server], https://hermes-agent.nousresearch.com/docs/user-guide/configuration
+#          y https://hermes-agent.nousresearch.com/docs/reference/toolsets-reference (leídas 2026-10-03).
+# No lleva ningún secreto: la llave del modelo y la del api_server llegan por variable de entorno.
+# Se copia dentro del contenedor con `docker cp` (ver compose.yml); no hay montajes del host.
+
+model:
+  provider: openrouter
+  default: ${OPENROUTER_MODEL}
+
+agent:
+  # Todas las toolsets núcleo de la referencia, para que el agente solo pueda usar la MCP de la tienda.
+  # `agent.disabled_toolsets` se aplica después de la config por plataforma, así que gana siempre.
+  # Las compuestas (coding, debugging, safe) y las `hermes-*` no se listan: se arman con estas.
+  disabled_toolsets:
+    - browser
+    - clarify
+    - code_execution
+    - computer_use
+    - connections
+    - cronjob
+    - delegation
+    - desktop_ui
+    - discord
+    - discord_admin
+    - feishu_doc
+    - feishu_drive
+    - file
+    - homeassistant
+    - image_gen
+    - kanban
+    - memory
+    - project
+    - search
+    - session_search
+    - setup
+    - skills
+    - spotify
+    - terminal
+    - todo
+    - tts
+    - video
+    - video_gen
+    - vision
+    - web
+    - x_search
+    - yuanbao
+
+gateway:
+  # Sin `multiplex_profiles`: con él el api_server reactiva las toolsets apagadas
+  # (https://github.com/NousResearch/hermes-agent/issues/91415). Un contenedor por cliente.
+  api_server:
+    enabled: true
+    max_concurrent_runs: 10   # tope por defecto; T015 lo prueba con 12 solicitudes
+
+# La única fuente de herramientas: la MCP de lectura (Toolbox, T029). Dirección por confirmar en T029.
+mcp_servers:
+  tienda:
+    url: "http://toolbox:5000/mcp"
+    tools:
+      include: [catalogo_buscar, item_obtener, disponibilidad]
+      prompts: false
+      resources: false

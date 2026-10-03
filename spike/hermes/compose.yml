@@ -1,0 +1,41 @@
+# T010 (SPEC-001, US1): Hermes Agent para el spike. Descartable.
+# Sin montajes del host: los datos van en un volumen con nombre y config.yaml se copia con docker cp.
+#
+# Levantar (desde spike/hermes/, con spike/.env rellenado):
+#   docker compose --env-file ../.env up -d --no-start
+#   docker cp config.yaml hermes-spike:/opt/data/config.yaml
+#   docker compose --env-file ../.env start
+# Validar sin arrancar nada (ensayo en seco):
+#   docker compose --env-file ../.env config --quiet
+
+services:
+  hermes:
+    # Versión fija (FR-004). Soporta arm64, que es la arquitectura de la VM. Registrar el digest en resultados.md.
+    image: nousresearch/hermes-agent:v2026.9.24
+    container_name: hermes-spike
+    command: gateway run
+    restart: "no"
+    ports:
+      # Solo en la VM misma; el api_server dentro del contenedor escucha en 0.0.0.0 (ver abajo).
+      - "127.0.0.1:8642:8642"
+    environment:
+      API_SERVER_ENABLED: "true"
+      API_SERVER_HOST: "0.0.0.0"
+      API_SERVER_KEY: ${API_SERVER_KEY:?falta API_SERVER_KEY en spike/.env}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:?falta OPENROUTER_API_KEY en spike/.env}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:?falta OPENROUTER_MODEL en spike/.env}
+    volumes:
+      - hermes-data:/opt/data
+    networks:
+      - hermes-net
+    security_opt:
+      - no-new-privileges:true
+    # Protege la VM compartida (10,9 GiB visibles, otro proyecto encima). Ajustar tras T033.
+    mem_limit: 2g
+
+volumes:
+  hermes-data:
+
+networks:
+  # Red propia; la Toolbox (T029) se une a ella con el nombre `toolbox`. T014 la vuelve interna.
+  hermes-net:
