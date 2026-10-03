@@ -33,9 +33,9 @@
 | Verificación | Requisito | Criterio | Resultado | Estado | Evidencia |
 |---|---|---|---|---|---|
 | V0 | FR-001 | Forma real de la VM registrada y contrastada con 2 OCPU / 12 GB | OCI declara 2 OCPU / 12 GB (coincide con el plan [EXT:Oracle Always Free]); el sistema ve 2 núcleos ARM y 10.898 MiB de memoria (unos 1.390 MiB menos que 12 GB, `[Probable]`: reserva del sistema). Provisional ([[ADR-009]]) | pasa | `spike/vm/forma.sh`, §1 |
-| V2 | FR-017 | Herramientas generadas desde descripción del esquema | | pendiente | |
-| V2 | FR-018 | Entradas hostiles no alteran la consulta | | pendiente | |
-| V2 | FR-019 | Sin vía de SQL libre; escritura con rol de lectura falla | | pendiente | |
+| V2 | FR-017 | Herramientas generadas desde descripción del esquema | `tools.yaml` sale idéntico al regenerarlo con `generar_tools.py` desde `esquema.json`; la Toolbox 1.13.1 cargó las 3 herramientas | pasa | `spike/toolbox/generar_tools.py`, T029 |
+| V2 | FR-018 | Entradas hostiles no alteran la consulta | 20 ataques (comillas, `; DROP`, `UNION` contra `pg_shadow`, `DELETE`, `pg_sleep`, tipos equivocados, texto de 200 caracteres, byte nulo, ruta de archivo): todos rechazados por el patrón de entrada o sin filas; tablas intactas (8 y 8 filas); control de búsqueda legítima devuelve 2 poleras. **Probada cada capa por separado:** con los patrones `allowedValues` quitados (Toolbox temporal), 19 de 20 siguen pasando solo por el parámetro `$1`; el comodín `%` (A04) devolvió 7 filas del catálogo, así que el patrón es necesario contra esa enumeración. Los 20 ataques son los que se me ocurrieron `[Probable]`, no una lista exhaustiva | pasa | `spike/toolbox/ataques.py`, T030 |
+| V2 | FR-019 | Sin vía de SQL libre; escritura con rol de lectura falla | Solo 3 herramientas `postgres-sql` con `SELECT` fijo; 7 nombres de SQL libre habituales rechazados por MCP; sin `--prebuilt` ni interfaz; la Toolbox recibe solo la clave del lector y Postgres no publica puertos. Con el rol `lector`: `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`, `DROP`, `CREATE` y leer `pg_shadow` fallan (`permission denied`); el rol `escritor` sí inserta (revertido), así que el fallo es del rol. El comprobador estático detecta un `compose.yml` con `--prebuilt` y un `tools.yaml` con `execute-sql` | pasa | `spike/toolbox/solo_lectura.py`, T031 |
 | V3 | FR-010 | Ninguna herramienta nativa activa; mensajes hostiles no ejecutan nada | | pendiente | |
 | V3 | FR-011 | Sesiones paralelas aisladas | | pendiente | |
 | V3 | FR-012 | Sin montajes del host; salida de red limitada | | pendiente | |
