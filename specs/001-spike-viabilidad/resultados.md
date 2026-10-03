@@ -21,7 +21,7 @@
 | Contenedores en ejecución (cualquier proyecto) | 2 |
 | Modelo `:free` de OpenRouter (identificador exacto) | pendiente (T005) |
 | Versión o digest: Docker | 29.8.1 (Compose 5.5.1) |
-| Versión o digest: Hermes | pendiente |
+| Versión o digest: Hermes | imagen `nousresearch/hermes-agent:v2026.9.24` (arm64 confirmado); el digest se anota al descargarla |
 | Versión o digest: MCP Toolbox | pendiente |
 | Versión o digest: Evolution API / Baileys | pendiente |
 | Versión: Postgres | pendiente |
