@@ -28,13 +28,13 @@ Modelo ([[ADR-010]]): `nvidia/nemotron-3-super-120b-a12b:free`, respaldos Qwen y
 - **T005 hecha:** llave de OpenRouter en `spike/.env`, válida (comprobada). `API_SERVER_KEY` y claves
   de Postgres siguen vacías.
 - **Tope diario de los `:free`: 50 solicitudes por día**, común a todos los modelos [Seguro, medido].
-  El spike pide ~150-200 (T012, T013, T015, T017 y el bucle de referencia): hay que repartirlo en días,
-  comprar créditos mínimos o sumar otro proveedor. Decide Richard ([[ADR-010]]).
-- Falta la MCP de lectura (T029–T031); T012 la usa como control.
+  El spike pide ~150-200. Richard decidió sumar proveedores gratuitos con cuota propia ([[ADR-011]]):
+  Gemini, Groq, Mistral, GitHub Models y NVIDIA. Faltan sus cuentas y llaves (T049, Richard).
+- MCP de lectura: levantada en la VM (T029); faltan T030–T031 (ataques y rol de solo lectura).
 - Falta un número de WhatsApp dedicado de prueba (no VoIP); solo bloquea V5.
 
 ## Proximo paso
-1. Richard decide qué hacer con el tope diario de 50.
-2. T029–T031 (Toolbox en la VM); luego levantar Hermes y correr T011–T015 y T017.
+1. Richard crea las cuentas y llaves de T049; luego `verificar_proveedores.py` fija modelos y cupos.
+2. T029 hecha (PR aparte, rama `001-spike-toolbox`); siguen T030–T031, luego Hermes y T011–T015, T017.
 Tareas en `specs/001-spike-viabilidad/tasks.md`; mediciones en `resultados.md`.
 Rama de trabajo: `docs/adr-010-modelos-free` (PR 8 abierto).
