@@ -43,7 +43,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 
 **⚠️ CRITICAL**: ninguna historia puede dar un veredicto sin esta fase. Si falta un insumo, la tarea correspondiente queda `bloqueada` con su causa (FR-027); no se omite.
 
-- [ ] T004 (Richard) Entregar acceso SSH a la Oracle VM (host, usuario, llave) y registrar en `resultados.md` §1 solo "acceso: sí/no" (nunca la llave); sin acceso, marcar V0 `bloqueada`
+- [x] T004 (Richard) Entregar acceso SSH a la Oracle VM (host, usuario, llave) y registrar en `resultados.md` §1 solo "acceso: sí/no" (nunca la llave); sin acceso, marcar V0 `bloqueada`
 - [ ] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
 - [ ] T006 V0: escribir `spike/vm/forma.sh` que registre arquitectura, núcleos, memoria, disco, sistema operativo y versiones de Docker y Python; ejecutarlo en la VM y pegar la salida en `resultados.md` §1; contrastar con 2 OCPU / 12 GB [EXT:Oracle Always Free] (FR-001, FR-004)
 - [x] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
@@ -160,6 +160,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T044 Verificar que cada verificación tiene estado `pasa`/`falla`/`bloqueada` con causa, que se cumplen SC-001 a SC-006 y que no hay secretos ni datos reales en `spike/` ni en `resultados.md` (FR-027, SC-006)
 - [ ] T045 Actualizar el nivel de SPEC-001 en `vault/MOCs/00 - Indice de Specs.md`, sobreescribir `STATE.md`, correr `graphify update .` y `graphify save-result` (cierre de fase de CLAUDE.md)
 - [ ] T046 Hacer los commits atómicos, subir la rama y actualizar el pull request siguiendo el ciclo de Git de `CLAUDE.md`; preguntar a Richard por `/thermos` antes de unir
+- [ ] T047 Cuando exista la VM definitiva ([[ADR-009]]), repetir allí V0 (`spike/vm/forma.sh`), V4 (`spike/measure/memoria.sh`), todas las mediciones de memoria y V5; reemplazar en `resultados.md` los valores provisionales por los de la VM definitiva y cerrar la nota de provisional (FR-001, FR-021, FR-022). **Se ejecuta antes de T042.**
 
 ---
 
@@ -184,7 +185,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 4. **US1** T010–T019
 5. **US4** T033–T036
 6. **US2** T021–T026 (cuando llegue la línea; T020 es tuya)
-7. Resto de US5 si aplica (T038–T041) y Phase 8 T042–T046
+7. **T047** (repetir en la VM definitiva) y luego Phase 8 T042–T046
 
 ### Within Each User Story
 
@@ -230,7 +231,8 @@ Task: "Escribir spike/measure/memoria.sh"
 
 ## Notes
 
-- Total: 46 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 5).
+- Total: 47 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 6).
+- La VM actual es provisional y compartida ([[ADR-009]]): sus resultados son provisionales hasta T047.
 - Todo es desechable salvo `resultados.md` y los ADR nuevos.
 - Datos solo sintéticos y modelos `:free` (Constitución IV); el bot nunca escribe primero (Constitución III).
 - Commit después de cada grupo lógico, con las reglas de Git de `CLAUDE.md`.

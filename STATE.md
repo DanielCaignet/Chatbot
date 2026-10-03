@@ -24,8 +24,9 @@ simulados (runner, bucle, memoria.sh) y por validación de esquema (generador); 
 en la VM (T006, T017, T029, T030).
 
 ## Bloqueos
-- Falta acceso a la Oracle VM (host, usuario, llave SSH) para el spike y para verificar su tamaño
-  real (los docs dicen 2 OCPU / 12 GB: [[Oracle Always Free]]).
+- La VM provisional ([[ADR-009]]) responde por SSH, pero el usuario del spike **no puede usar Docker**:
+  falta que alguien con sudo ejecute `sudo usermod -aG docker <usuario>`. Sin eso no corre nada.
+  Medido: ARM, 2 núcleos, 10.898 MB de memoria (no 12 GB), 8,7 GB de disco libres, compartida.
 - Falta llave de OpenRouter para el perfil `dev-free` ([[ADR-004]]).
 - Falta un número de WhatsApp dedicado de prueba (no VoIP) para Evolution/Baileys. Richard no lo
   tendrá en varios días: solo bloquea la verificación (a); el resto del spike puede avanzar.

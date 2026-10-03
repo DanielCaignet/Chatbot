@@ -260,6 +260,8 @@ no bloquea ninguna otra pieza.
 
 ## Assumptions
 
+- **VM provisional (2026-10-03, [[ADR-009]]).** El spike avanza en una VM compartida con otro proyecto y con menos memoria que la planeada; sus resultados son provisionales. V0, V4, las mediciones de memoria y V5 se repiten en la VM definitiva (tarea T047). Esto matiza FR-001: la forma real se registra en ambas VM.
+
 - Orden de ejecución sugerido: forma de la VM → (c) → (b) → (a) → (d) → (e); (b) puede arrancar con
   un MCP de prueba mínimo si (c) no está lista.
 - Se construye un **bucle de referencia mínimo** solo para medir la razón de tokens; es descartable y
