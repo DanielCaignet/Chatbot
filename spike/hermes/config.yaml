@@ -8,6 +8,11 @@ model:
   provider: openrouter
   default: ${OPENROUTER_MODEL}
 
+# Respaldos: Hermes cambia de proveedor ante límite de cuota (429), error del servidor o fallo de
+# autenticación. Los respaldos de OTRO proveedor (ADR-011) entran aquí cuando T049 verifique su modelo y
+# su cuota. No se añaden más modelos de OpenRouter: comparten el tope diario de la cuenta (ADR-010).
+# Cada cambio de modelo en una prueba debe quedar anotado en resultados.md.
+
 agent:
   # Todas las toolsets núcleo de la referencia, para que el agente solo pueda usar la MCP de la tienda.
   # `agent.disabled_toolsets` se aplica después de la config por plataforma, así que gana siempre.

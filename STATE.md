@@ -12,30 +12,29 @@ actualizado: 2026-10-03
 
 ## Donde estamos
 F0 cerrada: Spec Kit + vault + grafo montados. Constitución v1.0.0 ratificada
-([[ADR-000-constitucion]]). Decisiones base en [[ADR-001]]…[[ADR-009]].
+([[ADR-000-constitucion]]). Decisiones base en [[ADR-001]]…[[ADR-010]].
 Plan maestro aprobado: `docs/PLAN-MAESTRO.md`. Traspaso a Richard: `docs/COMO-CONTINUAR.md`.
 
 ## Spec activo
 [[SPEC-001]] spike de viabilidad F1 (N0): `specs/001-spike-viabilidad/spec.md`. Meta de desarrollo =
-4 clientes por VM (FR-022).
-Hecho y unido a `main`: T001–T004, T006–T009, T016, T027, T028, T037–T041. **Antigravity descartado
-por el criterio 6** [Probable]; ADR en T043.
-Hecho en la rama `001-spike-hermes`: T010 (compose y config de Hermes, validados con
-`docker compose config` en la VM) y escritos sin correr T011, T012, T013, T014, T015 (probados solo
-contra un servidor simulado). Imagen fijada `nousresearch/hermes-agent:v2026.9.24`, arm64 confirmado.
+4 clientes por VM (FR-022). **Antigravity descartado por el criterio 6** [Probable]; ADR en T043.
+Unido a `main` (PR 7, auditado con `/thermos`): T010 (compose y config de Hermes, validados en la
+VM) y escritos sin correr T011–T015 (probados solo contra un servidor simulado). Mejoras: T048.
+Modelo ([[ADR-010]]): `nvidia/nemotron-3-super-120b-a12b:free`, comparado con Ultra y Lightning.
 
 ## Bloqueos
-- VM provisional ([[ADR-009]]): responde por SSH, Docker y Python 3.9 listos. Forma: ARM, 2 núcleos,
-  10.898 MiB visibles, 8,7 GB de disco libres, compartida con otro proyecto. La imagen de Hermes pesa
-  ~1 GB comprimida: medir el disco antes de bajarla.
-- **T005 en curso (Richard):** falta la llave de OpenRouter en `spike/.env` y el modelo `:free`.
-  Sin ella no se pueden correr T011–T015 contra el modelo ni T017.
-- Falta la MCP de lectura (T029–T031, Toolbox): T012 la usa como control y Hermes la declara en
-  `config.yaml` (dirección `http://toolbox:5000/mcp`, por confirmar en T029).
-- Falta un número de WhatsApp dedicado de prueba (no VoIP) para Evolution/Baileys; solo bloquea V5.
+- VM provisional ([[ADR-009]]): SSH, Docker y Python listos; ARM, 2 núcleos, 10,9 GiB, 8,4 GB de
+  disco libres, compartida. Hermes pesa ~1 GB comprimido: medir el disco antes de bajarlo.
+- **T005 hecha:** llave de OpenRouter en `spike/.env`, válida (comprobada). `API_SERVER_KEY` y claves
+  de Postgres siguen vacías.
+- **Tope diario de los `:free`: 50 solicitudes por día**, común a todos los modelos [Seguro, medido].
+  El spike pide ~150-200. Richard decidió sumar proveedores gratuitos con cuota propia ([[ADR-011]]):
+  Gemini, Groq, Mistral, GitHub Models y NVIDIA. Faltan sus cuentas y llaves (T049, Richard).
+- MCP de lectura: levantada en la VM (T029); faltan T030–T031 (ataques y rol de solo lectura).
+- Falta un número de WhatsApp dedicado de prueba (no VoIP); solo bloquea V5.
 
 ## Proximo paso
-1. Richard termina T005 y avisa el identificador del modelo (se anota en `resultados.md` §1).
-2. T029–T031 (Toolbox en la VM). Luego levantar Hermes y correr T011–T015 y T017.
+1. Richard crea las cuentas y llaves de T049; luego `verificar_proveedores.py` fija modelos y cupos.
+2. T029 hecha (PR aparte, rama `001-spike-toolbox`); siguen T030–T031, luego Hermes y T011–T015, T017.
 Tareas en `specs/001-spike-viabilidad/tasks.md`; mediciones en `resultados.md`.
-Rama de trabajo: `001-spike-hermes`.
+Rama de trabajo: `docs/adr-010-modelos-free` (PR 8 abierto).

@@ -10,7 +10,7 @@ actualizado: 2026-10-03
 
 ## Infraestructura y modelos
 - [[Oracle Always Free]] · [[LLM local en Ampere A1]]
-- [[OpenRouter limites]] · [[Gemini API precios y terminos]] · [[DeepSeek precios]]
+- [[OpenRouter limites]] · [[Proveedores LLM gratuitos]] · [[Gemini API precios y terminos]] · [[DeepSeek precios]]
 
 ## Canal y arnés
 - [[Evolution API]] · [[Ban de WhatsApp en bots 2026]] · [[Hermes Agent api_server]] · [[Antigravity terminos]] · [[Squid lista blanca]]

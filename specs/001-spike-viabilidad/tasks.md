@@ -44,7 +44,7 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 **⚠️ CRITICAL**: ninguna historia puede dar un veredicto sin esta fase. Si falta un insumo, la tarea correspondiente queda `bloqueada` con su causa (FR-027); no se omite.
 
 - [x] T004 (Richard) Entregar acceso SSH a la Oracle VM (host, usuario, llave) y registrar en `resultados.md` §1 solo "acceso: sí/no" (nunca la llave); sin acceso, marcar V0 `bloqueada`
-- [ ] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
+- [x] T005 [P] (Richard) Crear la llave de OpenRouter, guardarla en `spike/.env` y fijar el identificador exacto del modelo `:free` a usar; registrar solo el identificador en `resultados.md` §1
 - [x] T006 V0: escribir `spike/vm/forma.sh` que registre arquitectura, núcleos, memoria, disco, sistema operativo y versiones de Docker y Python; ejecutarlo en la VM y pegar la salida en `resultados.md` §1; contrastar con 2 OCPU / 12 GB [EXT:Oracle Always Free] (FR-001, FR-004)
 - [x] T007 [P] Crear `spike/bench/banco.json` con ~20 consultas sintéticas de tienda en seis grupos (`precio`, `stock`, `inexistente`, `ambigua`, `fuera_de_tema`, `hostil`), mínimo 2 por grupo, con campo `version`, según `contracts/banco-consultas.md` (FR-002)
 - [x] T008 Escribir `spike/bench/runner.py` que ejecute el banco contra un endpoint compatible con OpenAI y guarde por consulta: tiempo total, tiempo del modelo, `prompt_tokens`, `completion_tokens` y si hubo 429 del proveedor o del arnés, en `spike/bench/salida/*.json` (R4, R5; depende de T007)
@@ -162,6 +162,8 @@ description: "Lista de tareas del spike de viabilidad F1 (SPEC-001)"
 - [ ] T046 Hacer los commits atómicos, subir la rama y actualizar el pull request siguiendo el ciclo de Git de `CLAUDE.md`; preguntar a Richard por `/thermos` antes de unir
 - [ ] T047 Cuando exista la VM definitiva ([[ADR-009]]), repetir allí V0 (`spike/vm/forma.sh`), V4 (`spike/measure/memoria.sh`), todas las mediciones de memoria y V5; reemplazar en `resultados.md` los valores provisionales por los de la VM definitiva y cerrar la nota de provisional (FR-001, FR-021, FR-022). **Se ejecuta antes de T042.**
 - [ ] T048 (mejoras no bloqueantes de `/thermos` sobre el PR 7, hacer antes de reutilizar los scripts en T017 y T033): (a) `cliente.chat()` debe usar `runner.post_chat` para reintentar ante 429 en vez de duplicar el transporte; (b) pasar los heredocs de Python de `prueba_hostil.sh`, `prueba_sesiones.sh` y `prueba_toolsets.sh` a scripts `.py` con funciones comunes `guardar()` y `salir()` (contrato único de códigos: 0 pasa, 1 falla, 2 no se pudo, 3 no concluyente); (c) un `levantar.sh` con `--con-red` en lugar del ritual de tres pasos de `compose.yml`; (d) fijar la versión de `alpine/socat` (FR-004); (e) comprobar `docker compose version` ≥ 2.24 por el `!reset`; (f) tras la primera corrida real, ver si el registro de Hermes muestra las llamadas a herramientas y simplificar la lista `NATIVAS` de T012; (g) `mem_limit: 2g` de Hermes puede quedarse corto en T015, revisarlo con T033
+- [ ] T049 [P] (Richard) Crear cuenta y llave en cada proveedor de respaldo de [[ADR-011]] (Google AI Studio, Groq, Mistral, GitHub Models, NVIDIA build), pegar cada llave en `spike/.env`; luego `python spike/hermes/verificar_proveedores.py listar` y `probar` por proveedor para fijar el modelo y leer la cuota real; registrar solo identificadores y cupos en `resultados.md` §1 y añadir los respaldos verificados a `fallback_providers` de `config.yaml`
+- [ ] T050 Perfil de benchmark: hacer que `spike/baseline/bucle.py` y `spike/bench/runner.py` acepten cualquier endpoint compatible con OpenAI (url, llave y modelo por variables) y un perfil de Hermes sin respaldos, para correr T017 con un solo proveedor de cupo alto ([[ADR-011]])
 
 ---
 
@@ -232,7 +234,7 @@ Task: "Escribir spike/measure/memoria.sh"
 
 ## Notes
 
-- Total: 48 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 7).
+- Total: 50 tareas (Setup 3 · Foundational 6 · US1 10 · US2 7 · US3 6 · US4 4 · US5 5 · Cierre 9).
 - La VM actual es provisional y compartida ([[ADR-009]]): sus resultados son provisionales hasta T047.
 - Todo es desechable salvo `resultados.md` y los ADR nuevos.
 - Datos solo sintéticos y modelos `:free` (Constitución IV); el bot nunca escribe primero (Constitución III).
