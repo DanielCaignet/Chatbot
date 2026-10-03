@@ -21,7 +21,7 @@
 | Contenedores en ejecución (cualquier proyecto) | 2 |
 | Modelo `:free` de OpenRouter (identificador exacto) | pendiente (T005) |
 | Versión o digest: Docker | 29.8.1 (Compose 5.5.1) |
-| Versión o digest: Hermes | imagen `nousresearch/hermes-agent:v2026.9.24` (arm64 confirmado); el digest se anota al descargarla |
+| Versión o digest: Hermes | `nousresearch/hermes-agent:v2026.9.24` (Hermes Agent v0.21.5), digest `sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7`, arm64 |
 | Versión o digest: MCP Toolbox | imagen `toolbox:1.13.1` (arm64, build `e14cda6`) |
 | Versión o digest: Evolution API / Baileys | pendiente |
 | Versión: Postgres | imagen `postgres:17.11-alpine` (arm64) |
@@ -36,7 +36,7 @@
 | V2 | FR-017 | Herramientas generadas desde descripción del esquema | `tools.yaml` sale idéntico al regenerarlo con `generar_tools.py` desde `esquema.json`; la Toolbox 1.13.1 cargó las 3 herramientas | pasa | `spike/toolbox/generar_tools.py`, T029 |
 | V2 | FR-018 | Entradas hostiles no alteran la consulta | 20 ataques (comillas, `; DROP`, `UNION` contra `pg_shadow`, `DELETE`, `pg_sleep`, tipos equivocados, texto de 200 caracteres, byte nulo, ruta de archivo): todos rechazados por el patrón de entrada o sin filas; tablas intactas (8 y 8 filas); control de búsqueda legítima devuelve 2 poleras. **Probada cada capa por separado:** con los patrones `allowedValues` quitados (Toolbox temporal), 19 de 20 siguen pasando solo por el parámetro `$1`; el comodín `%` (A04) devolvió 7 filas del catálogo, así que el patrón es necesario contra esa enumeración. Los 20 ataques son los que se me ocurrieron `[Probable]`, no una lista exhaustiva | pasa | `spike/toolbox/ataques.py`, T030 |
 | V2 | FR-019 | Sin vía de SQL libre; escritura con rol de lectura falla | Solo 3 herramientas `postgres-sql` con `SELECT` fijo; 7 nombres de SQL libre habituales rechazados por MCP; sin `--prebuilt` ni interfaz; la Toolbox recibe solo la clave del lector y Postgres no publica puertos. Con el rol `lector`: `INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`, `DROP`, `CREATE` y leer `pg_shadow` fallan (`permission denied`); el rol `escritor` sí inserta (revertido), así que el fallo es del rol. El comprobador estático detecta un `compose.yml` con `--prebuilt` y un `tools.yaml` con `execute-sql` | pasa | `spike/toolbox/solo_lectura.py`, T031 |
-| V3 | FR-010 | Ninguna herramienta nativa activa; mensajes hostiles no ejecutan nada | | pendiente | |
+| V3 | FR-010 | Ninguna herramienta nativa activa; mensajes hostiles no ejecutan nada | **Parte 1 (T011) pasa:** `GET /v1/toolsets` devuelve 29 toolsets, 0 activas con herramientas; la MCP `tienda` registró 3 herramientas (`mcp__tienda__catalogo_buscar`, `...disponibilidad`, `...item_obtener`). **Control:** sin `agent.disabled_toolsets` quedan 14 activas y la prueba falla, así que el 0 se debe a la lista. Hermes no aplicó nada en silencio (sin `multiplex_profiles`). Se añadieron `a2a`, `stt` y `context_engine` a la lista, que la referencia no mencionaba. **Parte 2 (T012, consultas hostiles) pendiente** | pendiente (parte T011 pasa) | `spike/hermes/prueba_toolsets.sh` |
 | V3 | FR-011 | Sesiones paralelas aisladas | | pendiente | |
 | V3 | FR-012 | Sin montajes del host; salida de red limitada | | pendiente | |
 | V3 | FR-013 | 429 del arnés y recuperación sin pérdida ni duplicado | | pendiente | |

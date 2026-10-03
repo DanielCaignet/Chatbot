@@ -13,11 +13,13 @@ agent:
   # `agent.disabled_toolsets` se aplica después de la config por plataforma, así que gana siempre.
   # Las compuestas (coding, debugging, safe) y las `hermes-*` no se listan: se arman con estas.
   disabled_toolsets:
+    - a2a            # no figura en la referencia de toolsets pero /v1/toolsets la lista (5 herramientas)
     - browser
     - clarify
     - code_execution
     - computer_use
     - connections
+    - context_engine
     - cronjob
     - delegation
     - desktop_ui
@@ -36,6 +38,7 @@ agent:
     - setup
     - skills
     - spotify
+    - stt
     - terminal
     - todo
     - tts
