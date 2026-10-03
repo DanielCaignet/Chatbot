@@ -43,12 +43,24 @@
 
 | # | Criterio | Estado | Evidencia |
 |---|---|---|---|
-| 1 | Invocación programática sin interfaz gráfica | pendiente | |
-| 2 | ≥3 conversaciones concurrentes aisladas | pendiente | |
-| 3 | p95 < 15 s | pendiente | |
-| 4 | Usa la MCP del SAS | pendiente | |
-| 5 | 24/7 en Linux ARM sin sesión interactiva | pendiente | |
-| 6 | Términos permiten atender a terceros | pendiente | |
+| 1 | Invocación programática sin interfaz gráfica | no probado | descartado por criterio 6 |
+| 2 | ≥3 conversaciones concurrentes aisladas | no probado | descartado por criterio 6 |
+| 3 | p95 < 15 s | no probado | descartado por criterio 6 |
+| 4 | Usa la MCP del SAS | no probado | descartado por criterio 6 |
+| 5 | 24/7 en Linux ARM sin sesión interactiva | no probado | descartado por criterio 6 |
+| 6 | Términos permiten atender a terceros | **falla** `[Probable]` | Ver abajo |
+
+**Evidencia del criterio 6** (leída el 2026-10-02 en https://antigravity.google/terms/; ficha [[Antigravity terminos]]):
+- Cláusula 6: usar software, herramientas o servicios de terceros para acceder al servicio "is a breach of this Agreement" y puede suspender las cuentas de Antigravity y Gemini CLI. Nuestro bot sería precisamente software propio que accede al servicio para atender a clientes.
+- Ninguna cláusula autoriza atender a clientes finales con una cuenta personal (ausencia de cláusula, no verificada con consulta legal).
+- Cláusula 3: Google registra las interacciones y las usa para mejorar sus productos, lo que chocaría con la Constitución IV si hubiera datos reales.
+
+**Matices (por qué es `[Probable]` y no `[Seguro]`):**
+- El foro de Google dice que invocar `agy -p` desde scripts propios está soportado; es respuesta de comunidad, no el contrato.
+- Los términos no aplican a quien accede por Gemini Enterprise o Workspace con otros términos. Esa vía no se evaluó y queda fuera del alcance del spike.
+- No es asesoría legal.
+
+**Conclusión:** por la regla de ADR-008 (falla uno, se descarta), Antigravity queda **descartado** como agente del bot. El ADR formal se escribe en T043.
 
 ## 4. Cupo
 
@@ -70,4 +82,4 @@
 | Canal (Evolution + Baileys) | pendiente | WAHA / BuilderBot | |
 | Arnés (Hermes) | pendiente | bucle propio | |
 | Herramientas de lectura (MCP Toolbox) | pendiente | MCP propio | |
-| Antigravity | pendiente | descartado | |
+| Antigravity | no-go `[Probable]` (criterio 6) | descartado | pendiente (T043) |
