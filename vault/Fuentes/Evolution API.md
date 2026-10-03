@@ -19,6 +19,8 @@ Capa de canal adoptada ([[ADR-001]]).
 ## Datos duros
 - Licencia Apache-2.0 con condiciones: no quitar logo/copyright del frontend y **aviso visible** de que se usa Evolution API; si no, licencia comercial [Seguro, LICENSE].
 - Multi-instancia: varios números aislados en un despliegue [Probable].
+- El webhook `MESSAGES_UPSERT` trae `fromMe`. Hay reportes de recibir `fromMe: true` incluso de mensajes enviados por la propia API (https://github.com/EvolutionAPI/evolution-api/issues/956), así que distinguir humano vs API exige cruzar el id del mensaje con la respuesta del envío [Probable].
+- No hay cifras publicadas de RAM por instancia en ARM: se mide en el spike [Seguro que no hay dato].
 
 ## Conceptos
 [[Canal]] · [[Takeover]]

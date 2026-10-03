@@ -17,7 +17,7 @@ actualizado: 2026-10-01
 
 | ID | Titulo | Nivel | Limite | Status | Spec |
 |---|---|---|---|---|---|
-| — | _sin specs todavia_ | — | — | — | — |
+| [[SPEC-001]] | Spike de viabilidad F1 (gate) | N0 | — | vigente | `specs/001-spike-viabilidad/` |
 
 ## Superados
 _ninguno_
