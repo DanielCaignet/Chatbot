@@ -8,9 +8,19 @@
 | Dato | Valor |
 |---|---|
 | Acceso SSH a la VM | sí (VM provisional compartida, [[ADR-009]]; datos de acceso fuera del repositorio) |
-| Arquitectura, núcleos, memoria, disco, sistema operativo | pendiente (V0, tarea T006) |
+| Fecha de medición (UTC) | 2026-10-03T03:52:50Z (provisional, [[ADR-009]]) |
+| Forma según OCI (metadatos) | VM.Standard.A1.Flex, 2.0 OCPU, 12.0 GB |
+| Arquitectura | aarch64 |
+| Núcleos visibles | 2 |
+| Memoria total visible (MiB) | 10898 |
+| Memoria usada al medir (MiB) | 1417 (otro proyecto en la misma VM) |
+| Memoria disponible al medir (MiB) | 9480 |
+| Disco raíz | 30G total, 8.7G libres, 71% usado |
+| Sistema operativo | Oracle Linux Server 9.8, kernel 6.12.0-204.92.4.4.3.el9uek.aarch64 |
+| Python del sistema | 3.9.25 |
+| Contenedores en ejecución (cualquier proyecto) | 2 |
 | Modelo `:free` de OpenRouter (identificador exacto) | pendiente (T005) |
-| Versión o digest: Docker | pendiente |
+| Versión o digest: Docker | 29.8.1 (Compose 5.5.1) |
 | Versión o digest: Hermes | pendiente |
 | Versión o digest: MCP Toolbox | pendiente |
 | Versión o digest: Evolution API / Baileys | pendiente |
@@ -22,7 +32,7 @@
 
 | Verificación | Requisito | Criterio | Resultado | Estado | Evidencia |
 |---|---|---|---|---|---|
-| V0 | FR-001 | Forma real de la VM registrada y contrastada con 2 OCPU / 12 GB | | pendiente | |
+| V0 | FR-001 | Forma real de la VM registrada y contrastada con 2 OCPU / 12 GB | OCI declara 2 OCPU / 12 GB (coincide con el plan [EXT:Oracle Always Free]); el sistema ve 2 núcleos ARM y 10.898 MiB de memoria (unos 1.390 MiB menos que 12 GB, `[Probable]`: reserva del sistema). Provisional ([[ADR-009]]) | pasa | `spike/vm/forma.sh`, §1 |
 | V2 | FR-017 | Herramientas generadas desde descripción del esquema | | pendiente | |
 | V2 | FR-018 | Entradas hostiles no alteran la consulta | | pendiente | |
 | V2 | FR-019 | Sin vía de SQL libre; escritura con rol de lectura falla | | pendiente | |
