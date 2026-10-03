@@ -7,7 +7,7 @@
 
 | Dato | Valor |
 |---|---|
-| Acceso SSH a la VM | pendiente |
+| Acceso SSH a la VM | sí (VM provisional compartida, [[ADR-009]]; datos de acceso fuera del repositorio) |
 | Arquitectura, núcleos, memoria, disco, sistema operativo | pendiente (V0, tarea T006) |
 | Modelo `:free` de OpenRouter (identificador exacto) | pendiente (T005) |
 | Versión o digest: Docker | pendiente |
@@ -15,6 +15,8 @@
 | Versión o digest: MCP Toolbox | pendiente |
 | Versión o digest: Evolution API / Baileys | pendiente |
 | Versión: Postgres | pendiente |
+
+> **Provisional:** los resultados de V0, V4, memoria y V5 obtenidos en la VM provisional no valen como definitivos; se repiten en la VM definitiva (T047).
 
 ## 2. Verificaciones
 
