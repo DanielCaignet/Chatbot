@@ -20,7 +20,7 @@ Plan maestro aprobado: `docs/PLAN-MAESTRO.md`. Traspaso a Richard: `docs/COMO-CO
 4 clientes por VM (FR-022). **Antigravity descartado por el criterio 6** [Probable]; ADR en T043.
 Unido a `main` (PR 7, auditado con `/thermos`): T010 (compose y config de Hermes, validados en la
 VM) y escritos sin correr T011–T015 (probados solo contra un servidor simulado). Mejoras: T048.
-Modelo ([[ADR-010]]): `nvidia/nemotron-3-super-120b-a12b:free`, respaldos Qwen y Gemma.
+Modelo ([[ADR-010]]): `nvidia/nemotron-3-super-120b-a12b:free`, comparado con Ultra y Lightning.
 
 ## Bloqueos
 - VM provisional ([[ADR-009]]): SSH, Docker y Python listos; ARM, 2 núcleos, 10,9 GiB, 8,4 GB de
